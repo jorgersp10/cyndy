@@ -152,30 +152,30 @@
                                         <tr class="bg-info">
                                             <th>Eliminar</th>
                                             <th>Producto</th>
-                                            <th>Precio(Gs)</th>
+                                            <th>Precio(USD)</th>
                                             <th>Cantidad</th>
-                                            <th>SubTotal (Gs)</th>
+                                            <th>SubTotal (USD)</th>
                                         </tr>
                                     </thead>                                
                                     <tfoot>                             
                                         <tr>
                                             <th  colspan="4"><p align="right">TOTAL:</p></th>
-                                            <th><p align="right"><span id="total_html">Gs. 0.00</span></th>
+                                            <th><p align="right"><span id="total_html">USD. 0.00</span></th>
                                         </tr>
 
                                         <tr>
                                             <th colspan="4"><p align="right">TOTAL IVA (5%):</p></th>
-                                            <th><p align="right"><span id="total_iva_5_html">Gs. 0.00</span><input type="hidden" name="total_iva_5" id="total_iva_5"></p></th>
+                                            <th><p align="right"><span id="total_iva_5_html">USD. 0.00</span><input type="hidden" name="total_iva_5" id="total_iva_5"></p></th>
                                         </tr>
 
                                         <tr>
                                             <th colspan="4"><p align="right">TOTAL IVA (10%):</p></th>
-                                            <th><p align="right"><span id="total_iva_html">Gs. 0.00</span><input type="hidden" name="total_iva" id="total_iva"></p></th>
+                                            <th><p align="right"><span id="total_iva_html">USD. 0.00</span><input type="hidden" name="total_iva" id="total_iva"></p></th>
                                         </tr>
 
                                         <tr>
                                             <th  colspan="4"><p align="right">TOTAL PAGAR:</p></th>
-                                            <th><p align="right"><span align="right" id="total_pagar_html">Gs. 0.00</span> <input type="hidden" name="total_pagar" id="total_pagar"></p></th>
+                                            <th><p align="right"><span align="right" id="total_pagar_html">USD. 0.00</span> <input type="hidden" name="total_pagar" id="total_pagar"></p></th>
                                         </tr>  
                                     </tfoot>
                                     <tbody>
@@ -611,24 +611,24 @@
 
                     //funcion para agregar separador de miles
                     var formatNumber = {
-                            separador: ".", // separador para los miles
-                            sepDecimal: ',', // separador para los decimales
-                            formatear:function (num){
-                            num +='';
-                            var splitStr = num.split('.');
-                            var splitLeft = splitStr[0];
-                            //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                            var regx = /(\d+)(\d{3})/;
-                            while (regx.test(splitLeft)) {
+                    separador: ",", // separador para los miles
+                    sepDecimal: '.', // separador para los decimales
+                    formatear: function(num) {
+                        num += '';
+                        var splitStr = num.split(',');
+                        var splitLeft = splitStr[0];
+                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                        var regx = /(\d+)(\d{3})/;
+                        while (regx.test(splitLeft)) {
                             splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                            }
-                            return this.simbol + splitLeft;
-                            },
-                            new:function(num, simbol){
-                            this.simbol = simbol ||'';
-                            return this.formatear(num);
-                            }
                         }
+                        return this.simbol + splitLeft;
+                    },
+                    new: function(num, simbol) {
+                        this.simbol = simbol || '';
+                        return this.formatear(num);
+                    }
+                }
                     //let numero1 =  (data.var[0].precio_venta).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
                     console.log("PRECIO: "+data.var2[0].unidad_medida);
@@ -728,30 +728,31 @@
             if(total_deuda==null || total_deuda=='')
                 total_deuda=0;
             else
-                total_deuda = total_deuda.replaceAll(".","");
+                total_deuda = total_deuda.replaceAll(",","");
 
             //CALCULARMOS EL VUELTO
-            total_plata = total_plata.replaceAll(".","");
+            total_plata = total_plata.replaceAll(",","");
             
             vuelto = parseFloat(total_plata) - parseFloat(total_deuda);
 
-            var formatNumber = {
-                separador: ".", // separador para los miles
-                sepDecimal: ',', // separador para los decimales
-                formatear:function (num){
-                num +='';
-                var splitStr = num.split('.');
-                var splitLeft = splitStr[0];
-                //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                var regx = /(\d+)(\d{3})/;
-                while (regx.test(splitLeft)) {
-                splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                }
-                return this.simbol + splitLeft;
-                },
-                new:function(num, simbol){
-                this.simbol = simbol ||'';
-                return this.formatear(num);
+                    var formatNumber = {
+                    separador: ",", // separador para los miles
+                    sepDecimal: '.', // separador para los decimales
+                    formatear: function(num) {
+                        num += '';
+                        var splitStr = num.split(',');
+                        var splitLeft = splitStr[0];
+                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                        var regx = /(\d+)(\d{3})/;
+                        while (regx.test(splitLeft)) {
+                            splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                        }
+                        return this.simbol + splitLeft;
+                    },
+                    new: function(num, simbol) {
+                        this.simbol = simbol || '';
+                        return this.formatear(num);
+                    }
                 }
             }
 
@@ -773,32 +774,32 @@
             if(precio_unidad==null || precio_unidad=='')
                 precio_unidad=0;
             else
-                precio_unidad = precio_unidad.replaceAll(".","");
+                precio_unidad = precio_unidad.replaceAll(",","");
 
             //CALCULARMOS EL VUELTO
-            plata_entrega = plata_entrega.replaceAll(".","");
+            plata_entrega = plata_entrega.replaceAll(",","");
             
             cant_estimada = parseFloat(plata_entrega) / parseFloat(precio_unidad);
 
             var formatNumber = {
-                separador: ".", // separador para los miles
-                sepDecimal: ',', // separador para los decimales
-                formatear:function (num){
-                num +='';
-                var splitStr = num.split('.');
+            separador: ",", // separador para los miles
+            sepDecimal: '.', // separador para los decimales
+            formatear: function(num) {
+                num += '';
+                var splitStr = num.split(',');
                 var splitLeft = splitStr[0];
                 //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
                 var regx = /(\d+)(\d{3})/;
                 while (regx.test(splitLeft)) {
-                splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
                 }
                 return this.simbol + splitLeft;
-                },
-                new:function(num, simbol){
-                this.simbol = simbol ||'';
+            },
+            new: function(num, simbol) {
+                this.simbol = simbol || '';
                 return this.formatear(num);
-                }
             }
+        }
 
             document.getElementById("cantidad_estimada").value = (cant_estimada);        
         }
@@ -853,31 +854,31 @@
                             precio = precio_mayor;
                         }
                         console.log("cantidad........"+cantidad);
-                        precioFinal = precio.replaceAll(".","");
+                        precioFinal = precio.replaceAll(",","");
                         cantidad_calculo = cantidad/valor;                      
-                        subtotal[cont]=Math.round(cantidad_calculo*precioFinal);
+                        subtotal[cont]=(cantidad_calculo*precioFinal);
                         total= total+subtotal[cont];
                         console.log("total de totales barcode: "+total);
                         //funcion para agregar separador de miles
                         var formatNumber = {
-                                separador: ".", // separador para los miles
-                                sepDecimal: ',', // separador para los decimales
-                                formatear:function (num){
-                                num +='';
-                                var splitStr = num.split('.');
-                                var splitLeft = splitStr[0];
-                                //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                                var regx = /(\d+)(\d{3})/;
-                                while (regx.test(splitLeft)) {
+                        separador: ",", // separador para los miles
+                        sepDecimal: '.', // separador para los decimales
+                        formatear: function(num) {
+                            num += '';
+                            var splitStr = num.split(',');
+                            var splitLeft = splitStr[0];
+                            //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                            var regx = /(\d+)(\d{3})/;
+                            while (regx.test(splitLeft)) {
                                 splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                                }
-                                return this.simbol + splitLeft;
-                                },
-                                new:function(num, simbol){
-                                this.simbol = simbol ||'';
-                                return this.formatear(num);
-                                }
                             }
+                            return this.simbol + splitLeft;
+                        },
+                        new: function(num, simbol) {
+                            this.simbol = simbol || '';
+                            return this.formatear(num);
+                        }
+                    }
 
                             //totales para la vista
                             subtotalVista[cont]=formatNumber.new(subtotal[cont]);
@@ -888,7 +889,7 @@
                             '</td> <td><input readonly style="width:100px" type="text" id="precio[]" name="precio[]"  value="'+precio+
                             '"> </td>  <td><input style="width:40px" readonly type="number" name="cantidad[]" id="cantidad[]" class="ent_cantidad" value="'+cantidad+
                             '"> </td> <td hidden><input readonly type="number" name="cantidad_calculo[]" value="'+cantidad_calculo+
-                            '"> <td>Gs. <input style="width:95px" type="text" class="totallinea" name="totallinea[]" id="totallinea[]" value="' + subtotalVista[cont] + '"> </td></tr>';
+                            '"> <td>USD. <input style="width:95px" type="text" class="totallinea" name="totallinea[]" id="totallinea[]" value="' + subtotalVista[cont] + '"> </td></tr>';
 
                             cont++;
                             limpiar();
@@ -918,32 +919,32 @@
                 function totales(){
 
                     var formatNumber = {
-                            separador: ".", // separador para los miles
-                            sepDecimal: ',', // separador para los decimales
-                            formatear:function (num){
-                            num +='';
-                            var splitStr = num.split('.');
-                            var splitLeft = splitStr[0];
-                            //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                            var regx = /(\d+)(\d{3})/;
-                            while (regx.test(splitLeft)) {
+                    separador: ",", // separador para los miles
+                    sepDecimal: '.', // separador para los decimales
+                    formatear: function(num) {
+                        num += '';
+                        var splitStr = num.split(',');
+                        var splitLeft = splitStr[0];
+                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                        var regx = /(\d+)(\d{3})/;
+                        while (regx.test(splitLeft)) {
                             splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                            }
-                            return this.simbol + splitLeft;
-                            },
-                            new:function(num, simbol){
-                            this.simbol = simbol ||'';
-                            return this.formatear(num);
-                            }
                         }
+                        return this.simbol + splitLeft;
+                    },
+                    new: function(num, simbol) {
+                        this.simbol = simbol || '';
+                        return this.formatear(num);
+                    }
+                }
         
-                $("#total_html").html("Gs. " + formatNumber.new(total));
-                $("#total").html("Gs. " + total);
+                $("#total_html").html("USD. " + formatNumber.new(total));
+                $("#total").html("USD. " + total);
                 //total_iva=total*iva/100;
                 total_iva=Math.round(total/iva);
                 total_pagar=total;
-                $("#total_iva_html").html("Gs. " + formatNumber.new(total_iva));
-                $("#total_pagar_html").html("Gs. " + formatNumber.new(total_pagar));
+                $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
+                $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
                 $("#total_pagar").val(total_pagar);
                 $("#total_iva").val(total_iva);
 
@@ -970,33 +971,33 @@
                 function eliminar(index){
 
                     var formatNumber = {
-                            separador: ".", // separador para los miles
-                            sepDecimal: ',', // separador para los decimales
-                            formatear:function (num){
-                            num +='';
-                            var splitStr = num.split('.');
-                            var splitLeft = splitStr[0];
-                            //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                            var regx = /(\d+)(\d{3})/;
-                            while (regx.test(splitLeft)) {
+                    separador: ",", // separador para los miles
+                    sepDecimal: '.', // separador para los decimales
+                    formatear: function(num) {
+                        num += '';
+                        var splitStr = num.split(',');
+                        var splitLeft = splitStr[0];
+                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                        var regx = /(\d+)(\d{3})/;
+                        while (regx.test(splitLeft)) {
                             splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                            }
-                            return this.simbol + splitLeft;
-                            },
-                            new:function(num, simbol){
-                            this.simbol = simbol ||'';
-                            return this.formatear(num);
-                            }
                         }
+                        return this.simbol + splitLeft;
+                    },
+                    new: function(num, simbol) {
+                        this.simbol = simbol || '';
+                        return this.formatear(num);
+                    }
+                }
         
                 total=total-subtotal[index];
                 //total_iva= total*11/100;
                 total_iva=Math.round(total/iva);
                 total_pagar_html = total;
                 
-                $("#total_html").html("Gs." + total);
-                $("#total_iva_html").html("Gs." + total_iva);
-                $("#total_pagar_html").html("Gs." + total_pagar_html);
+                $("#total_html").html("USD." + total);
+                $("#total_iva_html").html("USD." + total_iva);
+                $("#total_pagar_html").html("USD." + total_pagar_html);
                 $("#total_pagar").val(total_pagar_html);
 
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
@@ -1060,32 +1061,32 @@
                {
                 precio = precio_mayor;
                }
-               precioFinal = precio.replaceAll(".","");
+               precioFinal = precio.replaceAll(",","");
                cantidad_calculo = cantidad/valor;
                
-               subtotal[cont]=Math.round(cantidad_calculo*precioFinal);
+               subtotal[cont]=(cantidad_calculo*precioFinal);
                total= total+subtotal[cont];
                 console.log("total de totales: "+total);
                //funcion para agregar separador de miles
                var formatNumber = {
-                    separador: ".", // separador para los miles
-                    sepDecimal: ',', // separador para los decimales
-                    formatear:function (num){
-                    num +='';
-                    var splitStr = num.split('.');
+                separador: ",", // separador para los miles
+                sepDecimal: '.', // separador para los decimales
+                formatear: function(num) {
+                    num += '';
+                    var splitStr = num.split(',');
                     var splitLeft = splitStr[0];
                     //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
                     var regx = /(\d+)(\d{3})/;
                     while (regx.test(splitLeft)) {
-                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                        splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
                     }
                     return this.simbol + splitLeft;
-                    },
-                    new:function(num, simbol){
-                    this.simbol = simbol ||'';
+                },
+                new: function(num, simbol) {
+                    this.simbol = simbol || '';
                     return this.formatear(num);
-                    }
                 }
+            }
 
                //totales para la vista
                subtotalVista[cont]=formatNumber.new(subtotal[cont]);
@@ -1096,7 +1097,7 @@
                 '</td> <td><input readonly style="width:100px" type="text" id="precio[]" name="precio[]"  value="'+precio+
                 '"> </td>  <td><input style="width:40px" readonly type="number" name="cantidad[]" id="cantidad[]" class="ent_cantidad" value="'+cantidad+
                 '"> </td> <td hidden><input readonly type="number" name="cantidad_calculo[]" value="'+cantidad_calculo+
-                '"> <td>Gs. <input style="width:95px" type="text" class="totallinea" name="totallinea[]" id="totallinea[]" value="' + subtotalVista[cont] + '"> </td></tr>';
+                '"> <td>USD. <input style="width:95px" type="text" class="totallinea" name="totallinea[]" id="totallinea[]" value="' + subtotalVista[cont] + '"> </td></tr>';
 
                 cont++;
                 limpiar();
@@ -1127,32 +1128,32 @@
         function totales(){
 
             var formatNumber = {
-                    separador: ".", // separador para los miles
-                    sepDecimal: ',', // separador para los decimales
-                    formatear:function (num){
-                    num +='';
-                    var splitStr = num.split('.');
-                    var splitLeft = splitStr[0];
-                    //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                    var regx = /(\d+)(\d{3})/;
-                    while (regx.test(splitLeft)) {
+            separador: ",", // separador para los miles
+            sepDecimal: '.', // separador para los decimales
+            formatear: function(num) {
+                num += '';
+                var splitStr = num.split(',');
+                var splitLeft = splitStr[0];
+                //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                var regx = /(\d+)(\d{3})/;
+                while (regx.test(splitLeft)) {
                     splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                    }
-                    return this.simbol + splitLeft;
-                    },
-                    new:function(num, simbol){
-                    this.simbol = simbol ||'';
-                    return this.formatear(num);
-                    }
                 }
+                return this.simbol + splitLeft;
+            },
+            new: function(num, simbol) {
+                this.simbol = simbol || '';
+                return this.formatear(num);
+            }
+        }
    
-           $("#total_html").html("Gs. " + formatNumber.new(total));
-           $("#total").html("Gs. " + total);
+           $("#total_html").html("USD. " + formatNumber.new(total));
+           $("#total").html("USD. " + total);
            //total_iva=total*iva/100;
            total_iva=Math.round(total/iva);
            total_pagar=total;
-           $("#total_iva_html").html("Gs. " + formatNumber.new(total_iva));
-           $("#total_pagar_html").html("Gs. " + formatNumber.new(total_pagar));
+           $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
+           $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
            $("#total_pagar").val(total_pagar);
            $("#total_iva").val(total_iva);
 
@@ -1165,33 +1166,33 @@
         function eliminar(index){
 
             var formatNumber = {
-                    separador: ".", // separador para los miles
-                    sepDecimal: ',', // separador para los decimales
-                    formatear:function (num){
-                    num +='';
-                    var splitStr = num.split('.');
-                    var splitLeft = splitStr[0];
-                    //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                    var regx = /(\d+)(\d{3})/;
-                    while (regx.test(splitLeft)) {
+            separador: ",", // separador para los miles
+            sepDecimal: '.', // separador para los decimales
+            formatear: function(num) {
+                num += '';
+                var splitStr = num.split(',');
+                var splitLeft = splitStr[0];
+                //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                var regx = /(\d+)(\d{3})/;
+                while (regx.test(splitLeft)) {
                     splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                    }
-                    return this.simbol + splitLeft;
-                    },
-                    new:function(num, simbol){
-                    this.simbol = simbol ||'';
-                    return this.formatear(num);
-                    }
                 }
+                return this.simbol + splitLeft;
+            },
+            new: function(num, simbol) {
+                this.simbol = simbol || '';
+                return this.formatear(num);
+            }
+        }
    
            total=total-subtotal[index];
            //total_iva= total*11/100;
            total_iva=Math.round(total/iva);
            total_pagar_html = total;
           
-           $("#total_html").html("Gs." + total);
-           $("#total_iva_html").html("Gs." + total_iva);
-           $("#total_pagar_html").html("Gs." + total_pagar_html);
+           $("#total_html").html("USD." + total);
+           $("#total_iva_html").html("USD." + total_iva);
+           $("#total_pagar_html").html("USD." + total_pagar_html);
            $("#total_pagar").val(total_pagar_html);
 
            //TOTAL PARA EL DETALLE DE COBRO total_pagadof

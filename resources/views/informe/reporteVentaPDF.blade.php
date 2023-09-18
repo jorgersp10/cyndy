@@ -165,7 +165,7 @@
                 <thead>  
                     <tr> 
                         <th>Cliente</th>
-                        <th>Fact. Nro</th>
+                        <th>Factura/Ticket</th>
                         <th>Fecha</th>
                         <th>Total Iva</th>
                         <th>Total Factura</th>
@@ -174,11 +174,15 @@
             @foreach($ventas as $v)
                 <tbody>    
                     <tr>       
-                        <td>{{$v->nombre}}</td>                             
-                        <td>{{$v->fact_nro}}</td>
+                        <td>{{$v->nombre}}</td> 
+                        @if($v->fact_nro != 0)
+                            <td>Fact. {{$v->fact_nro}}</td>  
+                        @else
+                            <td>Ticket. {{$v->nro_recibo}}</td> 
+                        @endif
                         <td>{{ date('d-m-Y', strtotime($v->fecha)) }}</td>                             
-                        <td>Gs. {{number_format(($v->ivaTotal), 0, ",", ".")}}</td>
-                        <td>Gs. {{number_format(($v->total), 0, ",", ".")}}</td>                                                                     
+                        <td>USD. {{number_format(($v->ivaTotal), 2, ".", ",")}}</td>
+                        <td>USD. {{number_format(($v->total), 2, ".", ",")}}</td>                                                                     
                     </tr>
                 @php
                     $total_iva=$total_iva + $v->ivaTotal;
@@ -187,12 +191,33 @@
                 </tbody>
             @endforeach       
             <tr id="totales">       
-                <td >TOTALES</td>                             
+                <td >TOTALES USD</td>                             
                 <td></td>
                 <td></td>                             
-                <td>Gs. {{number_format(($total_iva), 0, ",", ".")}}</td>
-                <td>Gs. {{number_format(($total_venta), 0, ",", ".")}}</td>                                                                     
+                <td>USD. {{number_format(($total_iva), 2, ".", ",")}}</td>
+                <td>USD. {{number_format(($total_venta), 2, ".", ",")}}</td>                                                                     
             </tr>   
+            <tr id="totales">       
+                <td >TOTALES Gs.</td>                             
+                <td></td>
+                <td></td>                             
+                <td>Gs. {{number_format(($total_iva * $v->dolVenta), 0, ",", ".")}}</td>
+                <td>Gs. {{number_format(($total_venta * $v->dolVenta), 0, ",", ".")}}</td>                                                                     
+            </tr>
+            <tr id="totales">       
+                <td >TOTALES $</td>                             
+                <td></td>
+                <td></td>                             
+                <td>$. {{number_format(($total_iva * ($v->dolVenta / $v->psVenta)), 0, ",", ".")}}</td>
+                <td>$. {{number_format(($total_venta * ($v->dolVenta / $v->psVenta)), 0, ",", ".")}}</td>                                                                     
+            </tr>
+            <tr id="totales">       
+                <td >TOTALES R$</td>                             
+                <td></td>
+                <td></td>                             
+                <td>R$. {{number_format(($total_iva * ($v->dolVenta / $v->rsVenta)), 0, ",", ".")}}</td>
+                <td>R$. {{number_format(($total_venta * ($v->dolVenta / $v->rsVenta)), 0, ",", ".")}}</td>                                                                     
+            </tr>
             </table>
            
         </div>

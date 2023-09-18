@@ -180,12 +180,12 @@
                             <td>{{ date('d-m-Y', strtotime($ar->fechapago)) }}</td>
                             <td>{{$ar->cliente}}</td>
                             <td>{{$ar->producto}}</td>
-                            <td>Gs. {{number_format(($ar->importe), 0, ",", ".")}} </td>  
-                            <td>Gs. {{number_format($ar->total_pagf, 0, ",", ".")}}</td>
-                            <td>Gs. {{number_format($ar->total_pagtr, 0, ",", ".")}}</td>
-                            <td>Gs. {{number_format($ar->total_pagch, 0, ",", ".")}}</td>
-                            <td>Gs. {{number_format($ar->total_pagtd, 0, ",", ".")}}</td>
-                            <td>Gs. {{number_format($ar->total_pagtc, 0, ",", ".")}}</td>                          
+                            <td>USD {{number_format(($ar->importe), 2, ".", ",")}} </td>  
+                            <td>USD {{number_format($ar->total_pagf, 2, ".", ",")}}</td>
+                            <td>USD {{number_format($ar->total_pagtr, 2, ".", ",")}}</td>
+                            <td>USD {{number_format($ar->total_pagch, 2, ".", ",")}}</td>
+                            <td>USD {{number_format($ar->total_pagtd, 2, ".", ",")}}</td>
+                            <td>USD {{number_format($ar->total_pagtc, 2, ".", ",")}}</td>                          
                         </tr>  
                         @php
                             $totaldia=$totaldia + $ar->importe;  
@@ -196,16 +196,49 @@
                             $totaltc=$totaltc + $ar->total_pagtc;                                                       
                         @endphp
                 @endforeach
-                <tr id="totales"> 
+                <tr id="totales">  
                     <td></td> 
                     <td></td>     
-                    <td>Total</td>                                                 
-                    <td>Gs. {{number_format(($totaldia), 0, ",", ".")}}</td>  
-                    <td>Gs. {{number_format(($totalefe), 0, ",", ".")}}</td> 
-                    <td>Gs. {{number_format(($totaltran), 0, ",", ".")}}</td> 
-                    <td>Gs. {{number_format(($totalche), 0, ",", ".")}}</td> 
-                    <td>Gs. {{number_format(($totaltd), 0, ",", ".")}}</td> 
-                    <td>Gs. {{number_format(($totaltc), 0, ",", ".")}}</td>                                               
+                    <td>Total USD</td>                                                 
+                    <td>USD. {{number_format(($totaldia), 2, ".", ",")}}</td>  
+                    <td>USD. {{number_format(($totalefe), 2, ".", ",")}}</td> 
+                    <td>USD. {{number_format(($totaltran), 2, ".", ",")}}</td> 
+                    <td>USD. {{number_format(($totalche), 2, ".", ",")}}</td> 
+                    <td>USD. {{number_format(($totaltd), 2, ".", ",")}}</td> 
+                    <td>USD. {{number_format(($totaltc), 2, ".", ",")}}</td>                                               
+                </tr>
+                <tr id="totales">  
+                    <td></td> 
+                    <td></td>     
+                    <td>Total Gs.</td>                                                 
+                    <td>Gs. {{number_format(($totaldia * $ar->dolVenta), 0, ",", ".")}}</td>  
+                    <td>Gs. {{number_format(($totalefe * $ar->dolVenta), 0, ",", ".")}}</td> 
+                    <td>Gs. {{number_format(($totaltran * $ar->dolVenta), 0, ",", ".")}}</td> 
+                    <td>Gs. {{number_format(($totalche * $ar->dolVenta), 0, ",", ".")}}</td> 
+                    <td>Gs. {{number_format(($totaltd * $ar->dolVenta), 0, ",", ".")}}</td> 
+                    <td>Gs. {{number_format(($totaltc * $ar->dolVenta), 0, ",", ".")}}</td>                                               
+                </tr>
+                <tr id="totales">  
+                    <td></td> 
+                    <td></td>     
+                    <td>Total $</td>                                                 
+                    <td>$. {{number_format(($totaldia * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>  
+                    <td>$. {{number_format(($totalefe * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltran * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totalche * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltd * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltc * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>                                               
+                </tr>
+                <tr id="totales">  
+                    <td></td> 
+                    <td></td>     
+                    <td>Total R$</td>                                                 
+                    <td>R$. {{number_format(($totaldia * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>  
+                    <td>R$. {{number_format(($totalefe * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltran * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totalche * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltd * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltc * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>                                               
                 </tr>
             </tbody>
             @endif

@@ -37,7 +37,7 @@ class ClienteController extends Controller
             ->where('clientes.nombre','LIKE','%'.$sql.'%')
             ->orwhere('clientes.num_documento','LIKE','%'.$sql.'%')
             ->orderBy('clientes.id','desc')
-            ->simplepaginate(10);
+            ->paginate(10);
 
             /*listar los roles en ventana modal*/
     
@@ -468,8 +468,20 @@ class ClienteController extends Controller
     
     public function destroy($id)
     {
-        //dd($id);
-        Cliente::destroy($id);
-        return Redirect::to("cliente");
+        //Verificamos que el cliente no tenga Facturas
+        $ventas=DB::table('ventas as v')
+        ->where('v.cliente_id','=',$id)
+        ->first();
+        //dd($ventas);
+        if($ventas == null)
+        {
+            Cliente::destroy($id);
+            return Redirect::to("cliente");
+        }
+        else
+        {
+            return Redirect::to("cliente")->with('msj','NO SE PUEDE BORRAR, EL CLIENTE CUENTA CON COMPRAS ANTERIORES');
+        }
+        
     }
 }

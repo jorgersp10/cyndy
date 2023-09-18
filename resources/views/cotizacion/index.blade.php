@@ -54,10 +54,7 @@
                                     </thead>
                                     <tbody>
 
-                                         @foreach($cotizaciones as $cot)
-                                            <!-- El if realiza el filtro de datos de acuerdo a la empresa del usuario logueado
-                                            Asi cada usuario solo puede ver datos de su empresa -->
-                                        
+                                         @foreach($cotizaciones as $cot)                                        
                                             <tr>          
                                                 <td>                                    
                                                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#borrarRegistro-{{$cot->id}}">
@@ -65,13 +62,12 @@
                                                     </button>                                    
                                                 </td>               
                                                 <td>{{ date('d-m-Y', strtotime($cot->fecha)) }}</td>
-                                                <td>{{$cot->dolCompra}}</td>
-                                                <td>{{$cot->dolVenta}}</td>
-                                                <td>{{$cot->psCompra}}</td>
-                                                <td>{{$cot->psVenta}}</td>
-                                                <td>{{$cot->rsCompra}}</td>
-                                                <td>{{$cot->rsVenta}}</td>                                                
-                                                                              
+                                                <td>{{number_format(($cot->dolCompra), 0, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->dolVenta), 0, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->psCompra), 0, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->psVenta), 0, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->rsCompra), 0, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->rsVenta), 0, ",", ".")}}</td>                                                                                                           
                                             </tr>  
                                             @include('cotizacion.delete')
                                         @endforeach

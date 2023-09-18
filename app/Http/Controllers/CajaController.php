@@ -833,11 +833,13 @@ class CajaController extends Controller
         {
             $arqueo=DB::table('pagos as p')
             ->join('ventas as v','p.venta_id','=','v.id')
+            ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
             ->join('clientes as cli','cli.id','=','v.cliente_id')
             ->join('users as u','u.id','=','p.usuario_id')
             ->select('cli.nombre as cliente','v.nro_recibo as producto',
             'p.total_pag as importe','p.total_pagf','p.total_pagch','p.created_at',
-            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago')
+            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago',
+            'cot.dolVenta','cot.psVenta','cot.rsVenta')
             ->where('v.estado','=',"0")
             ->where('p.fec_pag','=',$fechaahora)
             ->get();
@@ -869,11 +871,13 @@ class CajaController extends Controller
         {
             $arqueo=DB::table('pagos as p')
             ->join('ventas as v','p.venta_id','=','v.id')
+            ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
             ->join('clientes as cli','cli.id','=','v.cliente_id')
             ->join('users as u','u.id','=','p.usuario_id')
             ->select('cli.nombre as cliente','v.nro_recibo as producto',
             'p.total_pag as importe','p.total_pagf','p.total_pagch','p.created_at',
-            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago')
+            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago',
+            'cot.dolVenta','cot.psVenta','cot.rsVenta')
             ->where('v.estado','=',"0")
             ->where('p.fec_pag','=',$fechaahora)
             ->get();
@@ -917,13 +921,15 @@ class CajaController extends Controller
         // VERIFICAR PARA QUE EL ADMIN PUEDA VER TODO
         if((auth()->user()->idrol)==1)
         {
-            $arqueo=DB::table('pagos as p')
+             $arqueo=DB::table('pagos as p')
             ->join('ventas as v','p.venta_id','=','v.id')
+            ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
             ->join('clientes as cli','cli.id','=','v.cliente_id')
             ->join('users as u','u.id','=','p.usuario_id')
             ->select('cli.nombre as cliente','v.nro_recibo as producto',
-            'p.total_pag as importe','p.total_pagf','p.total_pagch',
-            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago')
+            'p.total_pag as importe','p.total_pagf','p.total_pagch','p.created_at',
+            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago',
+            'cot.dolVenta','cot.psVenta','cot.rsVenta')
             ->where('p.fec_pag','=',$fecha_arqueo)
             ->where('v.estado','=',"0")
             //->where('p.usuario_id','=',$cajero)
@@ -939,11 +945,13 @@ class CajaController extends Controller
         {
             $arqueo=DB::table('pagos as p')
             ->join('ventas as v','p.venta_id','=','v.id')
+            ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
             ->join('clientes as cli','cli.id','=','v.cliente_id')
             ->join('users as u','u.id','=','p.usuario_id')
             ->select('cli.nombre as cliente','v.nro_recibo as producto',
-            'p.total_pag as importe','p.total_pagf','p.total_pagch',
-            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago')
+            'p.total_pag as importe','p.total_pagf','p.total_pagch','p.created_at',
+            'p.total_pagtd','p.total_pagtc','p.total_pagtr','p.fec_pag as fechapago',
+            'cot.dolVenta','cot.psVenta','cot.rsVenta')
             ->where('v.estado','=',"0")
             ->where('p.fec_pag','=',$fecha_arqueo)
             //->where('p.usuario_id','=',$cajero)

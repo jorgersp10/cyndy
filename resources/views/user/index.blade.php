@@ -6,6 +6,11 @@
         <!-- DataTables -->        
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/libs/rwd-table/rwd-table.min.css')}}">
         <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+        <style>
+            .btn-toolbar {
+                display: none !important;
+            }
+        </style>
 @endsection
 
 @section('content')
@@ -47,7 +52,7 @@
                                             <th  data-priority="1">Documento</th>
                                             <th  data-priority="1">Sucursal</th> 
                                             <th  data-priority="1">Rol</th> 
-                                            <th  data-priority="1">Email</th>
+                                            {{-- <th  data-priority="1">Email</th> --}}
                                             <th  data-priority="1">Dirección</th>
                                             <th  data-priority="1">Telefono</th>
                                             
@@ -88,7 +93,7 @@
                                                 <td>{{$user->num_documento}}</td>
                                                 <td>{{$user->sucursal}}</td>
                                                 <td>{{$user->rol}}</td>
-                                                <td>{{$user->email}}</td>
+                                                {{-- <td>{{$user->email}}</td> --}}
                                                 <td>{{$user->direccion}}</td>
                                                 <td>{{$user->telefono}}</td>
                                                 
@@ -99,7 +104,7 @@
                                     
                                     </tbody>
                                 </table>
-                                {{$usuarios->render()}}
+                                {{$usuarios->links()}}
                             </div> 
                         </div> 
                         

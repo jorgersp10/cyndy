@@ -49,12 +49,12 @@
                             {{Form::close()}}
                             </div>
                             <!-- <div class="col-md-5" style="text-align:right;">
-                                <h4>Total Facturado: Gs. {{number_format(($total_venta), 0, ",", ".")}}</h4>
-                                <h4>Total Compras: Gs. {{number_format(($total_compra_gasto), 0, ",", ".")}}</h4>
+                                <h4>Total Facturado: USD. {{number_format(($total_venta), 2, ".", ",")}}</h4>
+                                <h4>Total Compras: USD. {{number_format(($total_compra_gasto), 2, ".", ",")}}</h4>
                                 @if($saldoFactura > 0)
-                                    <h4 class="alert alert-success">Saldo: Gs. {{number_format(($saldoFactura), 0, ",", ".")}}</h4>
+                                    <h4 class="alert alert-success">Saldo: USD. {{number_format(($saldoFactura), 2, ".", ",")}}</h4>
                                 @else
-                                <h4 class="alert alert-danger">Saldo: Gs. {{number_format(($saldoFactura), 0, ",", ".")}}</h4>
+                                <h4 class="alert alert-danger">Saldo: USD. {{number_format(($saldoFactura), 2, ".", ",")}}</h4>
                                 @endif
                                 <input type="hidden" id="saldoFact" name="saldoFact" class="form-control" value="{{$saldoFactura}}">  
 
@@ -125,8 +125,8 @@
                                                     <td>{{$ven->nro_recibo}}</td>
                                                 @endif
                                                 <td>{{$ven->nombre}}</td>
-                                                <td>Gs. {{number_format(($ven->total), 0, ",", ".")}}</td>
-                                                <td>Gs. {{number_format(($ven->total/11), 0, ",", ".")}}</td>
+                                                <td>USD. {{number_format(($ven->total), 2, ".", ",")}}</td>
+                                                <td>USD. {{number_format(($ven->total/11), 2, ".", ",")}}</td>
                                                 <td>                                      
                                                     @if($ven->estado==0)
                                                         <button type="button" class="btn btn-primary btn-sm" >
@@ -170,7 +170,7 @@
                                 </table>
                             </div> 
                         </div> 
-                        {{$ventas->render()}}
+                        {{$ventas->links()}}
                     </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->

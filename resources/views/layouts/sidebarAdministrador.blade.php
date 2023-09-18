@@ -149,7 +149,7 @@
                                 {{csrf_field()}} 
                             </form> 
                         </li>
-                        <li><a class="waves-effect"  href="{{url('gasto')}}" onclick="event.preventDefault(); document.getElementById('gasto-form').submit();">    
+                        {{-- <li><a class="waves-effect"  href="{{url('gasto')}}" onclick="event.preventDefault(); document.getElementById('gasto-form').submit();">    
                             <span>Gastos</span></a>
                             <form id="gasto-form" action="{{url('gasto')}}" method="GET" style="display: none;">
                                 {{csrf_field()}} 
@@ -160,7 +160,7 @@
                             <form id="concepto-form" action="{{url('concepto')}}" method="GET" style="display: none;">
                                 {{csrf_field()}} 
                             </form> 
-                        </li>
+                        </li> --}}
                     </ul>
                      
                 </li>

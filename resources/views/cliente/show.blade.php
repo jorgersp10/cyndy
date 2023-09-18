@@ -101,8 +101,8 @@
                                         @else
                                                 <td>{{$ven->nro_recibo}}</td>
                                         @endif
-                                        <td>Gs. {{number_format(($ven->total), 0, ",", ".")}}</td>
-                                        <td>Gs. {{number_format(($ven->total/11), 0, ",", ".")}}</td>
+                                        <td>USD. {{number_format(($ven->total), 2, ".", ",")}}</td>
+                                        <td>USD. {{number_format(($ven->total/11), 2, ".", ",")}}</td>
                                         <td>                                      
                                                 @if($ven->estado==0)
                                                 <button type="button" class="btn btn-primary btn-sm" >

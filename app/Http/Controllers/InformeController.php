@@ -395,10 +395,11 @@ class InformeController extends Controller
         //Consulta de Inmuebles
 
         $ventas = DB::table('ventas as v')
-            ->join('clientes as c', 'c.id', '=', 'v.cliente_id')
-            ->select('v.id', 'v.fact_nro', 'v.iva5', 'v.iva10', 'v.ivaTotal', 'v.exenta', 'v.fecha',
-                'v.total', 'v.estado', 'c.nombre')
-            ->where('v.estado', '=', "0");
+        ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
+        ->join('clientes as c', 'c.id', '=', 'v.cliente_id')
+        ->select('v.id', 'v.fact_nro','v.nro_recibo', 'v.iva5', 'v.iva10', 'v.ivaTotal', 'v.exenta', 'v.fecha',
+        'v.total', 'v.estado', 'c.nombre','cot.dolVenta','cot.psVenta','cot.rsVenta')
+        ->where('v.estado', '=', "0");
 
         if ($date1 == null && $date2 == null) {
 

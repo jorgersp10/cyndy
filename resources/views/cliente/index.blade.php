@@ -6,6 +6,11 @@
         <!-- DataTables -->        
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/libs/rwd-table/rwd-table.min.css')}}">
         <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+        <style>
+            .btn-toolbar {
+                display: none !important;
+            }
+        </style>
 @endsection
 
 @section('content')
@@ -51,7 +56,7 @@
                                             <tr>      
                                             <th  data-priority="1">Editar</th>
                                             <th  data-priority="1">Estado Cuenta</th>
-                                            <th  data-priority="1">Documentos</th>
+                                            {{-- <th  data-priority="1">Documentos</th> --}}
                                             @if(auth()->user()->idrol == 1)  
                                                 <th  data-priority="1">Borrar</th>
                                             @endif
@@ -83,13 +88,13 @@
                                                     <i class="fa fa-edit fa-1x"></i> Editar
                                                     </button> &nbsp;
                                                 </td>  
-                                                <td>                                     
+                                                {{-- <td>                                     
                                                     <a href="{{URL::action('App\Http\Controllers\DocumentoController@show', $client->id)}}">
                                                         <button type="button" class="btn btn-success btn-sm" >
                                                             <i class="fa fa-success fa-1x"></i> Documentos
                                                         </button>
                                                     </a>
-                                                </td>   
+                                                </td>    --}}
                                                 <td>                                     
                                                     <a href="{{URL::action('App\Http\Controllers\ClienteController@show', $client->id)}}">
                                                         <button type="button" class="btn btn-success btn-sm" >
@@ -118,7 +123,7 @@
                                 </table>
                             </div> 
                         </div> 
-                        {{$clientes->render()}}
+                        {{$clientes->links()}}
                     </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->

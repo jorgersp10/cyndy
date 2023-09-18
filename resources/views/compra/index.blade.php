@@ -6,6 +6,11 @@
         <!-- DataTables -->        
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/libs/rwd-table/rwd-table.min.css')}}">
         <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+        <style>
+            .btn-toolbar {
+                display: none !important;
+            }
+        </style>
 @endsection
 
 @section('content')
@@ -61,7 +66,7 @@
                                             <th  data-priority="1">Contable</th>
                                             <th  data-priority="1">Estado</th>
                                             <th  data-priority="1">Cambiar Estado</th>
-                                            <th  data-priority="1">Acción</th>
+                                            {{-- <th  data-priority="1">Acción</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -88,7 +93,7 @@
                                                 <td>{{$co->fecha}}</td>
                                                 <td>{{$co->fact_compra}}</td>
                                                 <td>{{$co->nombre}}</td>
-                                                <td>Gs. {{number_format(($co->total), 0, ",", ".")}}</td>
+                                                <td>USD. {{number_format(($co->total), 2, ".", ",")}}</td>
                                                 @if($co->estado_pago == "P")
                                                     <td>PENDIENTE</td>
                                                 @else
@@ -138,7 +143,8 @@
                                                         @endif
                                                     
                                                     </td>
-                                                    @if($co->estado_pago == "P")
+                                                    
+                                                    {{-- @if($co->estado_pago == "P")
                                                     <td>                                     
                                                         <a href="{{URL::action('App\Http\Controllers\CompraController@pagarCompra', $co->id)}}">
                                                             <button type="button" class="btn btn-info btn-sm" >
@@ -154,7 +160,8 @@
                                                             </button>
                                                         </a>
                                                     </td>
-                                                    @endif
+                                                    @endif --}}
+                                                    
                                                 </tr>  
                                                 @include('compra.delete') 
                                         @endforeach
@@ -163,7 +170,7 @@
                                 </table>
                             </div> 
                         </div> 
-                        {{$compras->render()}}
+                        {{$compras->links()}}
                     </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->

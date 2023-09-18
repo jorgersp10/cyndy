@@ -6,6 +6,11 @@
         <!-- DataTables -->        
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/libs/rwd-table/rwd-table.min.css')}}">
         <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+        <style>
+            .btn-toolbar {
+                display: none !important;
+            }
+        </style>
 @endsection
 
 @section('content')
