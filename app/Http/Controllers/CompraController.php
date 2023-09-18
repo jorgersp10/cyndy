@@ -123,10 +123,14 @@ class CompraController extends Controller
         }
         return response()->json($response);
     }
-   public function store(Request $request){
-         
-    //dd($request->all());
-
+   public function store(Request $request)
+   {
+        $cotizaciones=DB::table('cotizaciones as c')
+        ->select('c.id','c.dolVenta','c.psVenta','c.rsVenta')
+        //->where('id','=',$nro_prof)
+        ->orderby('c.id','desc')
+        ->first(); 
+        
         try{
 
             DB::beginTransaction();
@@ -135,6 +139,7 @@ class CompraController extends Controller
 
             $compra = new Compra();
             $compra->proveedor_id = $request->proveedor_id;
+            $compra->cotiz_id = $cotizaciones->id;
             $compra->fact_compra = $request->fact_compra;
             $compra->fecha = $fecha_hoy->toDateString();
             $compra->iva = $request->total_iva;

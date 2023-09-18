@@ -141,10 +141,9 @@
     </style>
    
     <header>
-        <h2 id="titulo" class="text-center">Compras por rango de Fecha</h2>   
-
-    </header>
- 
+        <h3 id="titulo" class="text-center">Tati e Hijos S.A. Suc. II</h3>
+        <h3 id="titulo" class="text-center">Compras por rango de Fecha</h3> 
+    </header> 
     @if(($date1 == null || $date2 == null))
         <h3 >Rango de Fecha: Todas las fechas</h3>
         @else
@@ -153,7 +152,7 @@
     @if($compras=="Vacio")
     <h4 >No posee compras</h4>
     @else
-    <h3 id="titulo" class="text-center">Compras de materiales</h3>
+    {{-- <h3 id="titulo" class="text-center">Compras de materiales</h3> --}}
     ***************************************************************************
     <section id="marco">
         <div>
@@ -166,7 +165,7 @@
                 <thead>  
                     <tr> 
                         <th>Proveedor</th>
-                        <th>Fact. Nro</th>
+                        <th>Recibo/Fact N°</th>
                         <th>Fecha</th>
                         <th>Total Iva</th>
                         <th>Total Factura</th>
@@ -178,8 +177,8 @@
                         <td>{{$com->nombre}}</td>                             
                         <td>{{$com->fact_compra}}</td>
                         <td>{{ date('d-m-Y', strtotime($com->fecha)) }}</td>                             
-                        <td>Gs. {{number_format(($com->iva), 0, ",", ".")}}</td>
-                        <td>Gs. {{number_format(($com->total), 0, ",", ".")}}</td>                                                                     
+                        <td>USD. {{number_format(($com->iva), 2, ".", ",")}}</td>
+                        <td>USD. {{number_format(($com->total), 2, ".", ",")}}</td>                                                                     
                     </tr>
                 @php
                     $total_iva=$total_iva + $com->iva;
@@ -188,18 +187,39 @@
                 </tbody>
             @endforeach       
             <tr id="totales">       
-                <td >TOTALES</td>                             
+                <td >TOTALES USD.</td>                             
                 <td></td>
                 <td></td>                             
-                <td>Gs. {{number_format(($total_iva), 0, ",", ".")}}</td>
-                <td>Gs. {{number_format(($total_compra), 0, ",", ".")}}</td>                                                                     
-            </tr>   
+                <td>USD. {{number_format(($total_iva), 2, ".", ",")}}</td>
+                <td>USD. {{number_format(($total_compra), 2, ".", ",")}}</td>                                                                     
+            </tr> 
+            <tr id="totales">       
+                <td >TOTALES Gs.</td>                             
+                <td></td>
+                <td></td>                             
+                <td>Gs. {{number_format(($total_iva * $com->dolVenta), 0, ",", ".")}}</td>
+                <td>Gs. {{number_format(($total_compra * $com->dolVenta), 0, ",", ".")}}</td>                                                                     
+            </tr>
+            <tr id="totales">       
+                <td >TOTALES $</td>                             
+                <td></td>
+                <td></td>                             
+                <td>$. {{number_format(($total_iva * ($com->dolVenta / $com->psVenta)), 0, ",", ".")}}</td>
+                <td>$. {{number_format(($total_compra * ($com->dolVenta / $com->psVenta)), 0, ",", ".")}}</td>                                                                     
+            </tr>
+            <tr id="totales">       
+                <td >TOTALES R$</td>                             
+                <td></td>
+                <td></td>                             
+                <td>R$. {{number_format(($total_iva * ($com->dolVenta / $com->rsVenta)), 0, ",", ".")}}</td>
+                <td>R$. {{number_format(($total_compra * ($com->dolVenta / $com->rsVenta)), 0, ",", ".")}}</td>                                                                     
+            </tr>  
             </table>
            
         </div>
     </section>  
     @endif 
-
+{{-- 
     @if($gastos=="Vacio")
     <h4 >No posee gastos</h4>
     @else
@@ -248,10 +268,10 @@
            
         </div>
     </section>  
-    @endif 
+    @endif  --}}
 
     <!-- //PAGO DE SALARIOS -->
-     @if($salarios=="Vacio")
+     {{-- @if($salarios=="Vacio")
     <h4 >No posee salarios</h4>
     @else
     <h3 id="titulo" class="text-center">Pago de Salarios</h3>
@@ -299,9 +319,9 @@
            
         </div>
     </section>  
-    @endif 
+    @endif  --}}
 
-    @if($gastos=="Vacio")
+    {{-- @if($gastos=="Vacio")
             @php
                 $total_iva_gasto=0;
                 $total_gasto=0;
@@ -352,10 +372,10 @@
             </table>
            
         </div>
-    </section>  
+    </section>   --}}
   <footer>
     <hr>
-    <p><b>AyM INOX</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
+    <p><b>SistemaControl - </b> <b>Usuario:</b> {{auth()->user()->name}}</p>
     <p><b>{{date('d-m-Y H:i:s')}}</b></p>
   </footer>
 </html>

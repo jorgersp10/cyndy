@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title') Ventas @endsection
+@section('title') Inventario de Productos - {{date('d-m-Y H:i:s')}} @endsection
 
 @section('css') 
         <!-- DataTables -->        
@@ -34,8 +34,8 @@
                                 <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap">
                                     <thead>                            
                                         <tr>   
-                                            <th  data-priority="1">Código de Barra</th>    
-                                            <th  data-priority="1">Nombre</th> 
+                                            <th  data-priority="1">Nombre</th>
+                                            <th  data-priority="1">Código de Barra</th>  
                                             <th  data-priority="1">Stock</th>
                                             <th  data-priority="1">Precio Venta</th>
                                             <th  data-priority="1">Total</th> 
@@ -52,20 +52,20 @@
                                                     $total_cant = $total_cant + $prod->stock;                                                    
                                                     $sub_total = $prod->precio_venta*$prod->stock;
                                                     $total_contado =  $total_contado + $sub_total;
-                                                @endphp
-                                                <td>{{$prod->cod_barra}}</td>
+                                                @endphp                                                
                                                 <td>{{$prod->descripcion}}</td>
+                                                <td>{{$prod->cod_barra}}</td>
                                                 <td>{{$prod->stock}}</td>
-                                                <td>{{number_format(($prod->precio_venta), 0, "", "")}}</td>
-                                                <td>{{number_format(($sub_total), 0, "", "")}}</td>                                                                                                                                   
+                                                <td>USD. {{number_format(($prod->precio_venta), 2, ".", ",")}}</td>
+                                                <td>USD. {{number_format(($sub_total), 2, ".", ",")}}</td>                                                                                                                                   
                                             </tr>  
                                         @endforeach                                        
                                              <tr class="table-danger">      
-                                                <td></td>                           
-                                                <td>--TOTAL</td>
+                                                <td>z-TOTAL</td>                           
+                                                <td></td>
                                                 <td>{{$total_cant}}</td>
                                                 <td></td>
-                                                <td>{{number_format(($total_contado), 0, "", "")}}</td> 
+                                                <td>USD. {{number_format(($total_contado), 2, ".", ",")}}</td> 
                                             </tr> 
                                     </tbody>
                                 </table>
@@ -92,6 +92,13 @@
             });
         });
     </script> -->
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                order: [[0, 'asc']],
+            });
+        });
+    </script>
 
    <!-- Required datatable js -->
     <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>

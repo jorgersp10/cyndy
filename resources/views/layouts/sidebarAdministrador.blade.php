@@ -244,12 +244,12 @@
                                 {{csrf_field()}} 
                             </form> 
                         </li>
-                        <li><a class="waves-effect"  href="{{url('reporteInventario')}}" onclick="event.preventDefault(); document.getElementById('reporteInventario-form').submit();">    
+                        {{-- <li><a class="waves-effect"  href="{{url('reporteInventario')}}" onclick="event.preventDefault(); document.getElementById('reporteInventario-form').submit();">    
                             <span>Reporte Inventario</span></a>
                             <form id="reporteInventario-form" action="{{url('reporteInventario')}}" method="GET" style="display: none;">
                                 {{csrf_field()}} 
                             </form> 
-                        </li>
+                        </li> --}}
                         <li><a class="waves-effect"  href="{{url('reporteInventarioPrecio')}}" onclick="event.preventDefault(); document.getElementById('reporteInventarioPrecio-form').submit();">    
                             <span>Reporte Inventario con Precio</span></a>
                             <form id="reporteInventarioPrecio-form" action="{{url('reporteInventarioPrecio')}}" method="GET" style="display: none;">

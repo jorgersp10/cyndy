@@ -141,10 +141,10 @@
     </style>
 
     <header>
-        <h2 id="titulo" class="text-center">Productos más vendidos por monto GS</h2>
+        <h3 id="titulo" class="text-center">Tati e Hijos S.A. Suc. II</h3>
+        <h3 id="titulo" class="text-center">Productos más vendidos por monto</h3>
 
     </header>
-
     @if(($date1 == null || $date2 == null))
         <h3 >Rango de Fecha: Todas las fechas</h3>
         @else
@@ -159,31 +159,29 @@
             <table id="letratabla" class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>ArtCode</th>
+                        <th>Cod.Barra</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
                         <th>Monto</th>
                     </tr>
                 </thead>
             @foreach ($ventas as $com)
-
                 <tbody>
                     <tr>
-                        <td>{{$com->ArtCode}}</td>
+                        <td>{{$com->cod_barra}}</td>
                         <td>{{$com->descripcion}}</td>
                         <td>{{$com->cantidad}}</td>
-                        <td>Gs. {{number_format(($com->total), 0, ",", ".")}}</td>
+                        <td>USD. {{number_format(($com->total), 2, ".", ",")}}</td>
                     </tr>
                 </tbody>
             @endforeach
             </table>
-
         </div>
     </section>
     @endif
 <footer>
     <hr>
-    <p><b>AyM INOX</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
+    <p><b>SistemaControl - </b> <b>Usuario:</b> {{auth()->user()->name}}</p>
     <p><b>{{date('d-m-Y H:i:s')}}</b></p>
 </footer>
 </html>

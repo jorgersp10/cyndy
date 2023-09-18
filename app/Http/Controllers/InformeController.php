@@ -395,7 +395,7 @@ class InformeController extends Controller
         //Consulta de Inmuebles
 
         $ventas = DB::table('ventas as v')
-        ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
+        ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
         ->join('clientes as c', 'c.id', '=', 'v.cliente_id')
         ->select('v.id', 'v.fact_nro','v.nro_recibo', 'v.iva5', 'v.iva10', 'v.ivaTotal', 'v.exenta', 'v.fecha',
         'v.total', 'v.estado', 'c.nombre','cot.dolVenta','cot.psVenta','cot.rsVenta')
@@ -424,7 +424,7 @@ class InformeController extends Controller
         $moneda = "GS";
         return $pdf = \PDF::loadView('informe.reporteVentaPDF', ["date1" => $date1, "date2" => $date2,
             "ventas" => $ventas])
-            ->setPaper('a4', 'landscape')
+            ->setPaper('a4', 'portrait')
             ->stream('reporteDetallePDF.pdf');
     }
 
@@ -433,15 +433,20 @@ class InformeController extends Controller
         //dd($request);
         $date1 = $request->fecha1;
         $date2 = $request->fecha2;
-        //$producto=$request->producto_id;
-        //dd($request);
-        //Consulta de Inmuebles
+
+        $ventas = DB::table('ventas as v')
+        ->join('cotizaciones as cot','v.cotiz_id','=','v.cotiz_id')
+        ->join('clientes as c', 'c.id', '=', 'v.cliente_id')
+        ->select('v.id', 'v.fact_nro','v.nro_recibo', 'v.iva5', 'v.iva10', 'v.ivaTotal', 'v.exenta', 'v.fecha',
+        'v.total', 'v.estado', 'c.nombre','cot.dolVenta','cot.psVenta','cot.rsVenta')
+        ->where('v.estado', '=', "0");
 
         $compras = DB::table('compras as com')
-            ->join('proveedores as p', 'p.id', '=', 'com.proveedor_id')
-            ->select('com.id', 'com.fact_compra', 'com.iva', 'com.fecha',
-                'com.total', 'com.estado', 'p.nombre')
-            ->where('com.estado', '=', "0");
+        ->join('cotizaciones as cot','cot.id','=','com.cotiz_id')
+        ->join('proveedores as p', 'p.id', '=', 'com.proveedor_id')
+        ->select('com.id', 'com.fact_compra', 'com.iva', 'com.fecha',
+            'com.total', 'com.estado', 'p.nombre','cot.dolVenta','cot.psVenta','cot.rsVenta')
+        ->where('com.estado', '=', "0");
 
         if ($date1 == null && $date2 == null) {
 
@@ -466,10 +471,10 @@ class InformeController extends Controller
         //////////////////////////////////////////////////////////////////////////
 
         $gastos = DB::table('gastos as com')
-            ->join('proveedores as p', 'p.id', '=', 'com.proveedor_id')
-            ->select('com.id', 'com.fact_compra', 'com.iva', 'com.fecha',
-                'com.total', 'com.estado', 'p.nombre')
-            ->where('com.estado', '=', "0");
+        ->join('proveedores as p', 'p.id', '=', 'com.proveedor_id')
+        ->select('com.id', 'com.fact_compra', 'com.iva', 'com.fecha',
+            'com.total', 'com.estado', 'p.nombre')
+        ->where('com.estado', '=', "0");
 
         if ($date1 == null && $date2 == null) {
 
@@ -521,7 +526,7 @@ class InformeController extends Controller
         $moneda = "GS";
         return $pdf = \PDF::loadView('informe.reporteCompraPDF', ["date1" => $date1, "date2" => $date2,
             "compras" => $compras,"gastos" => $gastos,"salarios" => $salarios])
-            ->setPaper('a4', 'landscape')
+            ->setPaper('a4', 'portrait')
             ->stream('reporteDetallePDF.pdf');
     }
 
@@ -537,9 +542,9 @@ class InformeController extends Controller
             $ventas = DB::table('ventas as v')
                 ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
                 ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
-                ->select('p.ArtCode', 'p.descripcion', DB::raw('sum(vdet.cantidad) as total'))
+                ->select('p.cod_barra', 'p.descripcion', DB::raw('sum(vdet.cantidad) as total'))
                 ->where('v.estado', '=', "0")
-                ->groupBy('p.ArtCode', 'p.descripcion')
+                ->groupBy('p.cod_barra', 'p.descripcion')
                 ->orderBy('total', 'desc')
                 ->get();
 
@@ -547,10 +552,10 @@ class InformeController extends Controller
             $ventas = DB::table('ventas as v')
                 ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
                 ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
-                ->select('p.ArtCode', 'p.descripcion', DB::raw('sum(vdet.cantidad) as total'))
+                ->select('p.cod_barra', 'p.descripcion', DB::raw('sum(vdet.cantidad) as total'))
                 ->where('v.estado', '=', "0")
                 ->whereBetween('v.fecha', [$date1, $date2])
-                ->groupBy('p.ArtCode', 'p.descripcion')
+                ->groupBy('p.cod_barra', 'p.descripcion')
                 ->orderBy('total', 'desc')
                 ->get();
 
@@ -572,31 +577,33 @@ class InformeController extends Controller
         //dd($request);
         $date1 = $request->fecha1;
         $date2 = $request->fecha2;
-        //$producto=$request->producto_id;
-        //dd($request);
-        //Consulta de Inmuebles
+
         if (($date1 == null) || ($date2 == null)) {
             $ventas = DB::table('ventas as v')
-                ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
-                ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
-                ->select('p.ArtCode', 'p.descripcion', DB::raw('sum(vdet.cantidad) as cantidad'), 
-                DB::raw('sum(vdet.cantidad * vdet.precio) as total'))
-                ->where('v.estado', '=', "0")
-                ->groupBy('p.ArtCode', 'p.descripcion')
-                ->orderBy('total', 'desc')
-                ->get();
+            ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
+            ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
+            ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
+            ->select('p.cod_barra', 'p.descripcion','cot.dolVenta','cot.psVenta','cot.rsVenta', 
+            DB::raw('sum(vdet.cantidad) as cantidad'), 
+            DB::raw('sum(vdet.cantidad * vdet.precio) as total'))
+            ->where('v.estado', '=', "0")
+            ->groupBy('p.cod_barra', 'p.descripcion','cot.dolVenta','cot.psVenta','cot.rsVenta')
+            ->orderBy('total', 'desc')
+            ->get();
 
         } else {
             $ventas = DB::table('ventas as v')
-                ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
-                ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
-                ->select('p.ArtCode', 'p.descripcion', DB::raw('sum(vdet.cantidad) as cantidad'), 
-                DB::raw('sum(vdet.cantidad * vdet.precio) as total'))                
-                ->where('v.estado', '=', "0")
-                ->whereBetween('v.fecha', [$date1, $date2])
-                ->groupBy('p.ArtCode', 'p.descripcion')
-                ->orderBy('total', 'desc')
-                ->get();
+            ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
+            ->join('ventas_det as vdet', 'v.id', '=', 'vdet.venta_id')
+            ->join('productos as p', 'p.id', '=', 'vdet.producto_id')
+            ->select('p.cod_barra', 'p.descripcion','cot.dolVenta','cot.psVenta','cot.rsVenta',
+            DB::raw('sum(vdet.cantidad) as cantidad'), 
+            DB::raw('sum(vdet.cantidad * vdet.precio) as total'))                
+            ->where('v.estado', '=', "0")
+            ->whereBetween('v.fecha', [$date1, $date2])
+            ->groupBy('p.cod_barra', 'p.descripcion','cot.dolVenta','cot.psVenta','cot.rsVenta')
+            ->orderBy('total', 'desc')
+            ->get();
 
         }
 

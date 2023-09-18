@@ -141,18 +141,19 @@
     </style>
    
     <header>
-        <h2 id="titulo" class="text-center">Ventas por rango de Fecha</h2>   
-
-    </header>
- 
-    @if(($date1 == null || $date2 == null))
+        <h3 id="titulo" class="text-center">Tati e Hijos S.A. Suc. II</h3>
+        <h3 id="titulo" class="text-center">Ventas por rango de Fecha</h3>   
+        @if(($date1 == null || $date2 == null))
         <h3 >Rango de Fecha: Todas las fechas</h3>
         @else
         <h3>Rango de Fecha: {{ date('d-m-Y', strtotime($date1)) }} al {{ date('d-m-Y', strtotime($date2)) }}</h3>
-    @endif
-    @if($ventas=="Vacio")
-    <h4 >Cliente no posee cobros</h4>
-    @else
+        @endif
+        @if($ventas=="Vacio")
+        <h4 >Cliente no posee cobros</h4>
+        @else
+    </header>
+ 
+
     ***************************************************************************
     <section id="marco">
         <div>
@@ -225,7 +226,7 @@
     @endif 
   <footer>
     <hr>
-    <p><b>AyM INOX</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
+    <p><b>SistemaControl - </b> <b>Usuario:</b> {{auth()->user()->name}}</p>
     <p><b>{{date('d-m-Y H:i:s')}}</b></p>
   </footer>
 </html>

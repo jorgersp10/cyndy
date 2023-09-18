@@ -141,18 +141,17 @@
     </style>
    
     <header>
-        <h2 id="titulo" class="text-center">Arqueo del dia: {{ date('d-m-Y', strtotime($fecha_arqueo)) }}</h2>   
-                        <h3 id="titulo" class="text-center">Cajero: {{ $cajeroNombre }}</h3>
-
+        <h3 id="titulo" class="text-center">Tati e Hijos S.A. Suc. II</h3>
+        <h3 id="titulo" class="text-center">Arqueo del dia: {{ date('d-m-Y', strtotime($fecha_arqueo)) }} - Cajero: {{ $cajeroNombre }}</h3>   
     </header>
     <section id="marco">
         <div>
             <table id="letratabla" class="table table-bordered table-striped table-sm">  
            <thead>                               
                 <tr>
-                    <th>Fecha</th>
+                    {{-- <th>Fecha</th> --}}
                     <th>Cliente</th>
-                    <th>Recibo Nro</th>
+                    <th>Recibo/Fact.</th>
                     <th>Importe</th>
                     <th>Efectivo</th>
                     <th>Transf</th>
@@ -177,7 +176,7 @@
                 @else
                     @foreach($arqueo as $ar)
                         <tr>                                    
-                            <td>{{ date('d-m-Y', strtotime($ar->fechapago)) }}</td>
+                            {{-- <td>{{ date('d-m-Y', strtotime($ar->fechapago)) }}</td> --}}
                             <td>{{$ar->cliente}}</td>
                             <td>{{$ar->producto}}</td>
                             <td>USD {{number_format(($ar->importe), 2, ".", ",")}} </td>  
@@ -197,7 +196,6 @@
                         @endphp
                 @endforeach
                 <tr id="totales">  
-                    <td></td> 
                     <td></td>     
                     <td>Total USD</td>                                                 
                     <td>USD. {{number_format(($totaldia), 2, ".", ",")}}</td>  
@@ -208,7 +206,6 @@
                     <td>USD. {{number_format(($totaltc), 2, ".", ",")}}</td>                                               
                 </tr>
                 <tr id="totales">  
-                    <td></td> 
                     <td></td>     
                     <td>Total Gs.</td>                                                 
                     <td>Gs. {{number_format(($totaldia * $ar->dolVenta), 0, ",", ".")}}</td>  
@@ -219,7 +216,6 @@
                     <td>Gs. {{number_format(($totaltc * $ar->dolVenta), 0, ",", ".")}}</td>                                               
                 </tr>
                 <tr id="totales">  
-                    <td></td> 
                     <td></td>     
                     <td>Total $</td>                                                 
                     <td>$. {{number_format(($totaldia * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>  
@@ -230,7 +226,6 @@
                     <td>$. {{number_format(($totaltc * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>                                               
                 </tr>
                 <tr id="totales">  
-                    <td></td> 
                     <td></td>     
                     <td>Total R$</td>                                                 
                     <td>R$. {{number_format(($totaldia * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>  
@@ -247,7 +242,7 @@
     </section>  
   <footer>
     <hr>
-    <p><b>Fastersys</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
+    <p><b>SistemaControl</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
     <p><b>{{date('d-m-Y H:i:s')}}</b></p>
   </footer>
 </html>

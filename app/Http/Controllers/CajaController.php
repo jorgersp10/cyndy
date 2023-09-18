@@ -938,7 +938,10 @@ class CajaController extends Controller
             if($arqueo->isEmpty()){
                 $arqueo="Vacio";
             }
-            return view('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre]);
+            return $pdf= \PDF::loadView('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre])
+            ->setPaper([0, 0, 702.2835, 1150.087], 'portrait')
+            ->stream('Arqueo caja- '.$fecha_arqueo.'pdf');
+            //return view('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre]);
         }
 
         else
@@ -960,7 +963,10 @@ class CajaController extends Controller
             if($arqueo->isEmpty()){
                 $arqueo="Vacio";
             }
-            return view('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre]);
+            return $pdf= \PDF::loadView('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre])
+            ->setPaper([0, 0, 702.2835, 1150.087], 'portrait')
+            ->stream('Arqueo caja- '.$fecha_arqueo.'pdf');
+            //return view('caja.arqueo_dias',["arqueo"=>$arqueo,"fecha_arqueo"=>$fecha_arqueo,"cajeroNombre"=>$cajeroNombre]);
         }
         
     }

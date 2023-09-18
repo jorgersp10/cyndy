@@ -141,8 +141,8 @@
     </style>
 
     <header>
-        <h2 id="titulo" class="text-center">Productos más vendidos</h2>
-
+        <h3 id="titulo" class="text-center">Tati e Hijos S.A. Suc. II</h3>
+        <h3 id="titulo" class="text-center">Productos más vendidos</h3>
     </header>
 
     @if(($date1 == null || $date2 == null))
@@ -159,7 +159,7 @@
             <table id="letratabla" class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>ArtCode</th>
+                        <th>Cod.Barra</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
                     </tr>
@@ -168,7 +168,7 @@
 
                 <tbody>
                     <tr>
-                        <td>{{$com->ArtCode}}</td>
+                        <td>{{$com->cod_barra}}</td>
                         <td>{{$com->descripcion}}</td>
                         <td>{{$com->total}}</td>
                     </tr>
@@ -181,7 +181,7 @@
     @endif
 <footer>
     <hr>
-    <p><b>AyM INOX</b> <b>Usuario:</b> {{auth()->user()->name}}</p>
+    <p><b>SistemaControl - </b> <b>Usuario:</b> {{auth()->user()->name}}</p>
     <p><b>{{date('d-m-Y H:i:s')}}</b></p>
 </footer>
 </html>

@@ -33,7 +33,7 @@
                                 <table id="tech-companies-1" class="table table-striped">                               
                                     <thead>                               
                                         <tr>
-                                            <th data-priority="1">Fecha</th>
+                                            {{-- <th data-priority="1">Fecha</th> --}}
                                             <th data-priority="1">Cliente</th>
                                             <th data-priority="1">Pago / Factura Nro</th>
                                             <th data-priority="1">Importe</th>
@@ -60,7 +60,7 @@
                                         @else
                                             @foreach($arqueo as $ar)
                                                 <tr>                                    
-                                                    <td>{{ date('d-m-Y', strtotime($ar->fechapago)) }}</td>
+                                                    {{-- <td>{{ date('d-m-Y', strtotime($ar->fechapago)) }}</td> --}}
                                                     <td>{{$ar->cliente}}</td>
                                                     <td>Ticket {{$ar->producto}}</td>
                                                     <td>{{number_format(($ar->importe), 2, ".", ",")}} </td>  
@@ -80,7 +80,6 @@
                                                 @endphp
                                         @endforeach
                                         <tr class="table-dark">  
-                                            <td></td> 
                                             <td></td>     
                                             <td>Total USD</td>                                                 
                                             <td>USD. {{number_format(($totaldia), 2, ".", ",")}}</td>  
@@ -91,7 +90,6 @@
                                             <td>USD. {{number_format(($totaltc), 2, ".", ",")}}</td>                                               
                                         </tr>
                                         <tr class="table-dark">  
-                                            <td></td> 
                                             <td></td>     
                                             <td>Total Gs.</td>                                                 
                                             <td>Gs. {{number_format(($totaldia * $ar->dolVenta), 0, ",", ".")}}</td>  
@@ -102,7 +100,6 @@
                                             <td>Gs. {{number_format(($totaltc * $ar->dolVenta), 0, ",", ".")}}</td>                                               
                                         </tr>
                                         <tr class="table-dark">  
-                                            <td></td> 
                                             <td></td>     
                                             <td>Total $</td>                                                 
                                             <td>$. {{number_format(($totaldia * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>  
@@ -113,7 +110,6 @@
                                             <td>$. {{number_format(($totaltc * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>                                               
                                         </tr>
                                         <tr class="table-dark">  
-                                            <td></td> 
                                             <td></td>     
                                             <td>Total R$</td>                                                 
                                             <td>R$. {{number_format(($totaldia * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>  

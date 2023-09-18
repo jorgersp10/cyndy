@@ -22,10 +22,10 @@ class ProductoController extends Controller
             $sql = str_replace(" ", "%", $sql);
             $productos=DB::table('productos')
             ->join('unidades_medida as uni','uni.id','=','productos.medida_id')
-            ->leftjoin('electro_img as img','img.producto_id','=','productos.id')
+            //->leftjoin('electro_img as img','img.producto_id','=','productos.id')
             ->select('productos.id','productos.descripcion','productos.ArtCode','productos.stock'
             ,'productos.precio_compra','productos.precio_venta','productos.precio_min','productos.precio_max',
-            'uni.unidad_medida','img.imagen','productos.cod_barra')
+            'uni.unidad_medida','productos.cod_barra')
             ->where('productos.descripcion','LIKE','%'.$sql.'%')
             ->orWhere('productos.cod_barra','LIKE','%'.$sql.'%')
             ->orderBy('productos.ordenar','asc')
