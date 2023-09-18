@@ -71,8 +71,8 @@
                         <tr class="bg-info">
                             <th>Cantidad</th>
                             <th>Producto</th>
-                            <th>Precio (USD.)</th>                        
-                            <th>SubTotal (USD.)</th>
+                            <th>Precio (Gs.)</th>                        
+                            <th>SubTotal (Gs.)</th>
                         </tr>
                     </thead>
                     
@@ -80,17 +80,17 @@
 
                         <tr>
                             <th  colspan="3"><p align="right">TOTAL:</p></th>
-                            <th><p align="right">USD. {{number_format(($ventas->total), 2, ".", ",")}}</p></th>
+                            <th><p align="right">Gs. {{number_format(($ventas->total), 0, ",", ".")}}</p></th>
                         </tr>
 
                         <tr>
                             <th colspan="3"><p align="right">TOTAL IMPUESTO (10%):</p></th>
-                            <th><p align="right">USD. {{number_format(($ventas->total/11), 2, ".", ",")}}</p></th>
+                            <th><p align="right">Gs. {{number_format(($ventas->total/11), 0, ",", ".")}}</p></th>
                         </tr>
 
                         <tr>
                             <th  colspan="3"><p align="right">TOTAL PAGAR:</p></th>
-                            <th><p align="right">USD. {{number_format($ventas->total, 2, ".", ",")}}</p></th>
+                            <th><p align="right">Gs. {{number_format($ventas->total, 0, ",", ".")}}</p></th>
                         </tr> 
 
                     </tfoot>
@@ -102,8 +102,8 @@
                         <tr>
                         <td>{{$det->cantidad_calculo}}</td>
                         <td>{{$det->producto}}</td>
-                        <td>USD. {{number_format(($det->precio), 2, ".", ",")}}</td>
-                        <td>USD. {{number_format(($det->cantidad_calculo*$det->precio), 2, ".", ",")}}</td>
+                        <td>Gs. {{number_format(($det->precio), 0, ",", ".")}}</td>
+                        <td>Gs. {{number_format(($det->cantidad_calculo*$det->precio), 0, ",", ".")}}</td>
                         </tr> 
 
 
