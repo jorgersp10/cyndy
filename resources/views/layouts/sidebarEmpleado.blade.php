@@ -9,14 +9,14 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" key="t-menu">@lang('translation.Menu')</li>
 
-                <!-- <li>
+                <li>
                     <a class="waves-effect" href="{{url('cliente')}}" onclick="event.preventDefault(); document.getElementById('cliente-form').submit();">
                     <i class="bx bxs-user-detail"></i>
                     <span>Clientes</span></a>
                     <form id="cliente-form" action="{{url('cliente')}}" method="GET" style="display: none;">
                         {{csrf_field()}} 
                         </form>
-                </li>  -->
+                </li> 
 
                 <!-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -71,6 +71,7 @@
                     </ul>
                 </li>
                 
+                
                 <!-- <li class="nav-item">
                     <a class="waves-effect"  href="{{url('cajero')}}" onclick="event.preventDefault(); document.getElementById('cajero-form').submit();">
                     <i class="bx bx-user-check"></i> 
@@ -80,14 +81,14 @@
                     </form> 
                 </li> -->
 
-                <!-- <li>
+                <li>
                     <a class="waves-effect" href="{{url('producto')}}" onclick="event.preventDefault(); document.getElementById('producto-form').submit();">
                     <i class="fas fa-blender"></i>
                     <span>Productos</span></a>
                     <form id="producto-form" action="{{url('producto')}}" method="GET" style="display: none;">
                         {{csrf_field()}} 
                         </form>
-                </li>  -->
+                </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -119,11 +120,18 @@
                                 {{csrf_field()}} 
                             </form> 
                         </li> -->
+                        <li>
+                            <a class="waves-effect" href="{{url('cotizacion')}}" onclick="event.preventDefault(); document.getElementById('cotizacion-form').submit();">
+                            <span>Cotización</span></a>
+                            <form id="cotizacion-form" action="{{url('cotizacion')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                                </form>
+                        </li>
                     </ul>
                      
                 </li>
 
-                <!-- <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="fas fa-shopping-basket"></i> 
                         <span key="t-invoices">Compras</span>
@@ -155,7 +163,7 @@
                         </li>
                     </ul>
                      
-                </li> -->
+                </li> --}}
 
                 <!-- <li class="nav-item">
                     <a class="waves-effect"  href="{{url('presupuesto')}}" onclick="event.preventDefault(); document.getElementById('presupuesto-form').submit();">
@@ -200,14 +208,14 @@
                      
                 </li> -->
 
-                <!-- <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="waves-effect" href="{{url('user')}}" onclick="event.preventDefault(); document.getElementById('user-form').submit();">
                     <i class="fas fa-people-arrows"></i>
                     <span>Usuarios</span></a>
                     <form id="user-form" action="{{url('user')}}" method="GET" style="display: none;">
                         {{csrf_field()}} 
                         </form> 
-                </li> -->
+                </li> --}}
 
                 <!-- <li class="nav-item">
                     <a class="waves-effect" href="{{url('timbrado')}}" onclick="event.preventDefault(); document.getElementById('timbrado-form').submit();">
@@ -218,7 +226,57 @@
                         </form> 
                 </li> -->
 
-                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-file-export"></i>
+                        <span key="t-invoices">Reportes</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <!-- <li><a class="waves-effect"  href="{{url('informe')}}" onclick="event.preventDefault(); document.getElementById('informe-form').submit();">
+                            <span>Resumen Total</span></a>
+                            <form id="informe-form" action="{{url('informe')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                                </form> 
+                        </li> -->
+                        <li><a class="waves-effect"  href="{{url('reporteDetalle')}}" onclick="event.preventDefault(); document.getElementById('reporteDetalle-form').submit();">    
+                            <span>Reporte por Detalle</span></a>
+                            <form id="reporteDetalle-form" action="{{url('reporteDetalle')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                            </form> 
+                        </li>
+                        {{-- <li><a class="waves-effect"  href="{{url('reporteInventario')}}" onclick="event.preventDefault(); document.getElementById('reporteInventario-form').submit();">    
+                            <span>Reporte Inventario</span></a>
+                            <form id="reporteInventario-form" action="{{url('reporteInventario')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                            </form> 
+                        </li> --}}
+                        <li><a class="waves-effect"  href="{{url('reporteInventarioPrecio')}}" onclick="event.preventDefault(); document.getElementById('reporteInventarioPrecio-form').submit();">    
+                            <span>Reporte Inventario con Precio</span></a>
+                            <form id="reporteInventarioPrecio-form" action="{{url('reporteInventarioPrecio')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                            </form> 
+                        </li>
+                        <!-- <li><a class="waves-effect"  href="{{url('calculoMensual')}}" onclick="event.preventDefault(); document.getElementById('calculoMensual-form').submit();">    
+                            <span>Calculo mensual</span></a>
+                            <form id="calculoMensual-form" action="{{url('calculoMensual')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                            </form> 
+                        </li> -->
+                        <!-- <li><a class="waves-effect"  href="{{url('controlStock')}}" onclick="event.preventDefault(); document.getElementById('controlStock-form').submit();">    
+                            <span>Control de Stock</span></a>
+                            <form id="controlStock-form" action="{{url('controlStock')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                            </form> 
+                        </li> -->
+                        <!-- <li><a class="waves-effect"  href="{{url('iva')}}" onclick="event.preventDefault(); document.getElementById('iva-form').submit();">
+                            <span>Fecha IVA</span></a>
+                            <form id="iva-form" action="{{url('iva')}}" method="GET" style="display: none;">
+                                {{csrf_field()}} 
+                                </form> 
+                        </li> -->
+                    </ul>
+                     
+                </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-exit"></i>

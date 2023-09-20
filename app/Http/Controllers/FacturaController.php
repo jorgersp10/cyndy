@@ -100,9 +100,16 @@ class FacturaController extends Controller
 
             $total_compra_gasto = $total_compra + $total_gasto;
             $saldoFactura = $total_compra_gasto - $total_venta;
+
+            $cotizaciones=DB::table('cotizaciones as c')
+            //->join('empresas','clientes.idempresa','=','empresas.id')
+            ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+            'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+            ->orderBy('c.fecha','desc')
+            ->first();
  
             return view('factura.index',["ventas"=>$ventas,"total_venta"=>$total_venta,"total_venta"=>$total_venta,
-            "total_compra_gasto"=>$total_compra_gasto,"saldoFactura"=>$saldoFactura,"buscarTexto"=>$sql]);
+            "total_compra_gasto"=>$total_compra_gasto,"saldoFactura"=>$saldoFactura,"cotizaciones"=>$cotizaciones,"buscarTexto"=>$sql]);
             
            //return $compras;
         }
@@ -131,10 +138,17 @@ class FacturaController extends Controller
         ->join('bancos as b','b.id','=','cc.banco_id')
         ->select('cc.id','cc.nro_cuenta','cc.banco_id','b.descripcion as banco')
         ->get();
+
+        $cotizaciones=DB::table('cotizaciones as c')
+        //->join('empresas','clientes.idempresa','=','empresas.id')
+        ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+        'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+        ->orderBy('c.fecha','desc')
+        ->first();
         //dd($nro_factura);
 
         return view('factura.create',["clientes"=>$clientes,"productos"=>$productos,
-        "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas]);
+        "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,"cotizaciones"=>$cotizaciones]);
 
    }
 
@@ -429,7 +443,7 @@ class FacturaController extends Controller
 
             //$this->imprimirTicket($venta->id);
             return view('factura.create',["clientes"=>$clientes,"productos"=>$productos,
-                "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas]);
+                "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,"cotizaciones"=>$cotizaciones]);
            // return redirect()->route('imprimirTicket', ['id' => $venta->id]);
 
         } catch(Exception $e){
@@ -596,9 +610,9 @@ class FacturaController extends Controller
         $fpdf->Cell(60,4,'Taty e hijos S.A. Suc. II',0,1,'C');
         $fpdf->Ln(1);
         $fpdf->SetFont('Helvetica','',8);
-        $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
-        $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
-        $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
+        // $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
+        // $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
+        // $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
         // DATOS FACTURA        
         $fpdf->Ln(2);
         $fpdf->Cell(60,4,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
@@ -693,9 +707,9 @@ class FacturaController extends Controller
         $fpdf->Cell(60,4,'Taty e hijos S.A. Suc. II',0,1,'C');
         $fpdf->Ln(1);
         $fpdf->SetFont('Helvetica','',8);
-        $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
-        $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
-        $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
+        // $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
+        // $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
+        // $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
         // DATOS FACTURA        
         $fpdf->Ln(2);
         $fpdf->Cell(60,4,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');

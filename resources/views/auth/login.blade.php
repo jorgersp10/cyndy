@@ -80,8 +80,8 @@
                                             <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="username" class="form-label">Email</label>
-                                                    <input name="email" type="email"
+                                                    <label for="username" class="form-label">Usuario</label>
+                                                    <input name="email" type="text"
                                                         class="form-control @error('email') is-invalid @enderror"
                                                          id="username"
                                                         placeholder="Ingrese su Email" autocomplete="email" autofocus>

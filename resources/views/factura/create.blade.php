@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="card-body">
-                        <h5>Calculadora</h5>
+                        {{-- <h5>Calculadora</h5>
                          <div class="form-group row">
                             <div class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="cantidad">Dinero</label>
@@ -61,6 +61,26 @@
                                     <input type="text" id="cantidad_estimada" name="cantidad_estimada" class="form-control" placeholder="Cantidad estimada">
                                 </div>
                             </div>
+                        </div> --}}
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label class="col-md-3 form-control-label" for="cantidad">Dolar</label>
+                                <div class="mb-3">
+                                    <input readonly type="text" id="dolVenta" name="dolVenta" value="{{number_format(($cotizaciones->dolVenta), 0, ",", ".")}}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-md-3 form-control-label" for="precio">Peso</label>
+                                <div class="mb-3">
+                                    <input readonly type="text" id="psVenta" name="psVenta" value="{{number_format(($cotizaciones->psVenta), 0, ",", ".")}}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-md-3 form-control-label" for="precio">Real</label>
+                                <div class="mb-3">
+                                    <input readonly type="text" id="rsVenta" name="rsVenta" value="{{number_format(($cotizaciones->rsVenta), 0, ",", ".")}}" class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <form id="form_mora" action="{{route('factura.store')}}" method="POST"> 
                         <input hidden type="text" id="contable" name="contable" value=0 class="form-control">
@@ -74,7 +94,7 @@
                             <div class="col-md-4">
                                 <label class="col-md-3 form-control-label" for="cantidad">Cantidad</label>
                                 <div class="mb-3">
-                                    <input type="text" id="cantidad" name="cantidad" class="form-control" value=1 placeholder="Ingrese cantidad">
+                                    <input type="number" id="cantidad" name="cantidad" class="form-control" value=1 placeholder="Ingrese cantidad">
                                 </div>
                             </div>
                         </div>
@@ -89,7 +109,13 @@
                                     </select>
                                 </div>                                
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="col-md-3 form-control-label" for="precio">Stock</label>
+                                <div class="mb-3">
+                                    <input readonly type="text" id="stock" name="stock" class="form-control" placeholder="Stock">
+                                </div>
+                            </div>
+                            <div hidden class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="precio">U. medida</label>
                                 <div class="mb-3">
                                     <input readonly type="text" id="medida" name="medida" class="form-control">
@@ -104,8 +130,27 @@
                             
                             <div class="col-md-4">
                                 <label class="col-md-3 form-control-label" for="precio">Precio</label>
-                                <div class="mb-3">
+                                <div class="col-md-4">
                                     <input type="text" id="precio" name="precio" class="form-control number" placeholder="Ingrese precio">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-3 form-control-label" for="precio">Precio Recargo</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="precio_recargo" name="precio_recargo" class="form-control number" placeholder="Ingrese precio">
+                                </div>
+                            </div>                            
+                            <div class="col-md-4">
+                                <label class="col-md-6 form-control-label" for="documento">USAR PRECIO CON RECARGO</label>
+                                
+                                <div class="col-md-4">
+                                
+                                    <select class="form-control" name="recargo" id="recargo">                                                                        
+                                        <option disabled>Seleccione</option>
+                                        <option value="0">NO</option>
+                                        <option value="1">SI</option>
+                                    </select>
+                                
                                 </div>
                             </div>
                             <div class="col-md-3"> 
@@ -115,7 +160,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div hidden class="form-group row">
                             <div hidden class="col-md-4">
                                 <label class="col-md-3 form-control-label" for="cantidad">Precio Min.</label>
                                 <div class="mb-3">
@@ -134,13 +179,7 @@
                                     <input readonly type="text" id="precio_mayor" name="precio_mayor" class="form-control">
                                     <input readonly type="text" id="cantidad_mayor" name="cantidad_mayor" class="form-control" placeholder="Precio máximo">
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="col-md-3 form-control-label" for="precio">Stock</label>
-                                <div class="mb-3">
-                                    <input readonly type="text" id="stock" name="stock" class="form-control" placeholder="Stock">
-                                </div>
-                            </div>
+                            </div>                            
                         </div><br>
                         <div class="form-group row border">
 
@@ -205,29 +244,35 @@
                         </div>
                         <h5>FORMA DE PAGO</h5>
                            <div class="form-group row">                                
-                                <div class="col-md-4">
-                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Total a Pagar</label>
+                                <div class="col-3">
+                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Total USD</label>
                                     <div class="col-md-5">
                                         <input readonly="readonly" type="text" id="total_apag" name="total_apag" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Dinero del Cliente</label>
+                                <div class="col-3">
+                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Total Gs.</label>
                                     <div class="col-md-5">
-                                        <input type="text" id="total_plata" name="total_plata" class="form-control number2" onchange="obtenerVuelto()">
+                                        <input readonly="readonly" type="text" id="total_gs" name="total_gs" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total Vuelto</label>
+                                <div class="col-3">
+                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Total $ Pesos</label>
                                     <div class="col-md-5">
-                                        <input readonly="readonly" type="text" id="total_vuelto" name="total_vuelto" class="form-control">
+                                        <input readonly="readonly" type="text" id="total_ps" name="total_ps" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="horizontal-firstname-input" class="col-md-5 col-form-label">Total R$ Reales</label>
+                                    <div class="col-md-5">
+                                        <input readonly="readonly" type="text" id="total_rs" name="total_rs" class="form-control">
                                     </div>
                                 </div>
                             </div><br>
                                 <div class="row mb-4">
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total Efectivo </label>
                                     <div class="col-sm-3">
-                                        <input type="text" id="total_pagadof" name="total_pagadof" class="form-control number10" value="0">
+                                        <input type="text" id="total_pagadof" name="total_pagadof" class="form-control" value="0">
                                     </div>
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Nro Cheque </label>
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Banco </label>
@@ -236,7 +281,7 @@
                                 <div class="row mb-4">
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total Cheque </label>
                                     <div class="col-sm-3">
-                                        <input type="text" id="total_pagadoch" name="total_pagadoch" class="form-control number20" value="0">
+                                        <input type="text" id="total_pagadoch" name="total_pagadoch" class="form-control" value="0">
                                     </div>
                                     
                                     <div class="col-sm-3">
@@ -257,7 +302,7 @@
                                 <div class="row mb-4">
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total T. Credito </label>
                                     <div class="col-sm-3">
-                                        <input type="text" id="total_pagadotc" name="total_pagadotc" class="form-control number30" value="0">
+                                        <input type="text" id="total_pagadotc" name="total_pagadotc" class="form-control" value="0">
                                     </div>
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Nro Comprob. </label>
                                     <div class="col-sm-3">
@@ -268,7 +313,7 @@
                                 <div class="row mb-4">
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total T. Debito </label>
                                     <div class="col-sm-3">
-                                        <input type="text" id="total_pagadotd" name="total_pagadotd" class="form-control number40" value="0">
+                                        <input type="text" id="total_pagadotd" name="total_pagadotd" class="form-control" value="0">
                                     </div>
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">N° Comprob. </label>
                                     <div class="col-sm-3">
@@ -278,7 +323,7 @@
                                 <div class="row mb-4">
                                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Total Transferencia </label>
                                     <div class="col-sm-3">
-                                        <input type="text" id="total_pagadotr" name="total_pagadotr" class="form-control number50" value="0">
+                                        <input type="text" id="total_pagadotr" name="total_pagadotr" class="form-control" value="0">
                                     </div>
                                     
                                     <div hidden class="col-sm-4">
@@ -568,14 +613,14 @@
                         }
                     //let numero1 =  (data.var[0].precio_venta).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-                    console.log("PRECIO: "+data.var2[0].unidad_medida);
+                    console.log("STOCK: "+data.var[0].stock);
                     document.getElementById("precio").value = formatNumber.new(data.var[0].precio_venta);
-                    document.getElementById("precio_unidad").value = formatNumber.new(data.var[0].precio_venta);
-                    document.getElementById("precio_min").value = formatNumber.new(data.var[0].precio_min);
-                    document.getElementById("precio_max").value = formatNumber.new(data.var[0].precio_max);
+                    document.getElementById("precio_recargo").value = formatNumber.new(data.var[0].precio_tarjeta);
+                    // document.getElementById("precio_unidad").value = formatNumber.new(data.var[0].precio_venta);
+                    // document.getElementById("precio_min").value = formatNumber.new(data.var[0].precio_min);
+                    // document.getElementById("precio_max").value = formatNumber.new(data.var[0].precio_max);
                     document.getElementById("stock").value = data.var[0].stock;
                     document.getElementById("medida").value = data.var2[0].unidad_medida;
-                    document.getElementById("valor").value = data.var3[0].valor;
 
                     document.getElementById("precio_mayor").value = formatNumber.new(data.var[0].precio_mayor);
                     document.getElementById("cantidad_mayor").value = (data.var[0].cantidad_mayor);
@@ -631,15 +676,15 @@
                 }
                     //let numero1 =  (data.var[0].precio_venta).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-                    console.log("PRECIO: "+data.var2[0].unidad_medida);
+                    console.log("STOCK: "+data.var[0].stock);
 
                     document.getElementById("precio").value = formatNumber.new(data.var[0].precio_venta);
-                    document.getElementById("precio_unidad").value = formatNumber.new(data.var[0].precio_venta);
-                    document.getElementById("precio_min").value = formatNumber.new(data.var[0].precio_min);
-                    document.getElementById("precio_max").value = formatNumber.new(data.var[0].precio_max);
+                    document.getElementById("precio_recargo").value = formatNumber.new(data.var[0].precio_tarjeta);
+                    // document.getElementById("precio_unidad").value = formatNumber.new(data.var[0].precio_venta);
+                    // document.getElementById("precio_min").value = formatNumber.new(data.var[0].precio_min);
+                    // document.getElementById("precio_max").value = formatNumber.new(data.var[0].precio_max);
                     document.getElementById("stock").value = data.var[0].stock;
                     document.getElementById("medida").value = data.var2[0].unidad_medida;
-                    document.getElementById("valor").value = data.var3[0].valor;
 
                     document.getElementById("precio_mayor").value = formatNumber.new(data.var[0].precio_mayor);
                     document.getElementById("cantidad_mayor").value = (data.var[0].cantidad_mayor);
@@ -714,98 +759,6 @@
 
 </script>
 
- 
-    <script>
-        function obtenerVuelto()//funcion para enviar datos de la empresa al form
-        {        
-            var total_plata = 0;
-            var total_deuda = 0;
-            var vuelto = 0;
-
-            total_plata = document.getElementById("total_plata").value; 
-            total_deuda = document.getElementById("total_pagar").value;
-
-            if(total_deuda==null || total_deuda=='')
-                total_deuda=0;
-            else
-                total_deuda = total_deuda.replaceAll(",","");
-
-            //CALCULARMOS EL VUELTO
-            total_plata = total_plata.replaceAll(",","");
-            
-            vuelto = parseFloat(total_plata) - parseFloat(total_deuda);
-
-                    var formatNumber = {
-                    separador: ",", // separador para los miles
-                    sepDecimal: '.', // separador para los decimales
-                    formatear: function(num) {
-                        num += '';
-                        var splitStr = num.split(',');
-                        var splitLeft = splitStr[0];
-                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                        var regx = /(\d+)(\d{3})/;
-                        while (regx.test(splitLeft)) {
-                            splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                        }
-                        return this.simbol + splitLeft;
-                    },
-                    new: function(num, simbol) {
-                        this.simbol = simbol || '';
-                        return this.formatear(num);
-                    }
-                }
-            }
-
-            document.getElementById("total_vuelto").value = formatNumber.new(vuelto);        
-        }
-
-    </script>
-
-    <script>
-        function obtenerEstimacion()//funcion para enviar datos de la empresa al form
-        {        
-            var plata_entrega = 0;
-            var precio_unidad = 0;
-            var cant_estimada = 0;
-
-            plata_entrega = document.getElementById("plata_entrega").value; 
-            precio_unidad = document.getElementById("precio_unidad").value;
-
-            if(precio_unidad==null || precio_unidad=='')
-                precio_unidad=0;
-            else
-                precio_unidad = precio_unidad.replaceAll(",","");
-
-            //CALCULARMOS EL VUELTO
-            plata_entrega = plata_entrega.replaceAll(",","");
-            
-            cant_estimada = parseFloat(plata_entrega) / parseFloat(precio_unidad);
-
-            var formatNumber = {
-            separador: ",", // separador para los miles
-            sepDecimal: '.', // separador para los decimales
-            formatear: function(num) {
-                num += '';
-                var splitStr = num.split(',');
-                var splitLeft = splitStr[0];
-                //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
-                var regx = /(\d+)(\d{3})/;
-                while (regx.test(splitLeft)) {
-                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                }
-                return this.simbol + splitLeft;
-            },
-            new: function(num, simbol) {
-                this.simbol = simbol || '';
-                return this.formatear(num);
-            }
-        }
-
-            document.getElementById("cantidad_estimada").value = (cant_estimada);        
-        }
-
-    </script>
-
     <script>
         var cont=0;           
         subtotal=[];
@@ -827,15 +780,30 @@
                     //producto_id= $("#producto_id").val();
                     //producto= $("#producto_id option:selected").text();
                     cantidad= $("#cantidad").val();
-                    precio= $("#precio").val();
+                    recargo= $("#recargo").val();
+                    console.log("recargo: "+recargo);
+                    if(recargo == 0)
+                    {
+                        precio= $("#precio").val();
+                    }
+                    else
+                    {
+                        precio= $("#precio_recargo").val();
+                    }                    
                     stockpro = $("#stock").val();
                     precio_minimo= $("#precio_min").val();
                     precio_maximo= $("#precio_max").val();
                     unidad_medida= $("#medida").val();
-                    valor= $("#valor").val();
+                    valor= 1;
                     precio_mayor= $("#precio_mayor").val();
                     cantidad_mayor= $("#cantidad_mayor").val();
                     iva=11;
+                    dolar= $("#dolVenta").val();
+                    dolar = dolar.replaceAll(".","");
+                    peso= $("#psVenta").val();
+                    peso = peso.replaceAll(".","");
+                    real= $("#rsVenta").val();
+                    real = real.replaceAll(".","");
                     console.log("precio ob: "+precio);
                     if(parseFloat(stockpro) < parseFloat(cantidad)){
                         
@@ -854,6 +822,7 @@
                             precio = precio_mayor;
                         }
                         console.log("cantidad........"+cantidad);
+                        console.log("valor........"+valor);
                         precioFinal = precio.replaceAll(",","");
                         cantidad_calculo = cantidad/valor;                      
                         subtotal[cont]=(cantidad_calculo*precioFinal);
@@ -951,6 +920,29 @@
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
                 $("#total_apag").val(formatNumber.new(total_pagar));
                 $("#total_pagadof").val(formatNumber.new(total_pagar));
+                //TOTALES EN LAS OTRAS MONEDAS
+                var formatNumberGS = {
+                    separador: ".", // separador para los miles
+                    sepDecimal: ',', // separador para los decimales
+                    formatear:function (num){
+                    num +='';
+                    var splitStr = num.split('.');
+                    var splitLeft = splitStr[0];
+                    //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                    var regx = /(\d+)(\d{3})/;
+                    while (regx.test(splitLeft)) {
+                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                    }
+                    return this.simbol + splitLeft;
+                    },
+                    new:function(num, simbol){
+                    this.simbol = simbol ||'';
+                    return this.formatear(num);
+                    }
+                }
+                $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
+                $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
+                $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
                 
                 }
         
@@ -1003,6 +995,30 @@
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
                 $("#total_apag").val(formatNumber.new(total));
                 $("#total_pagadof").val(formatNumber.new(total));
+
+                //TOTALES EN LAS OTRAS MONEDAS
+                var formatNumberGS = {
+                    separador: ".", // separador para los miles
+                    sepDecimal: ',', // separador para los decimales
+                    formatear:function (num){
+                    num +='';
+                    var splitStr = num.split('.');
+                    var splitLeft = splitStr[0];
+                    //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                    var regx = /(\d+)(\d{3})/;
+                    while (regx.test(splitLeft)) {
+                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                    }
+                    return this.simbol + splitLeft;
+                    },
+                    new:function(num, simbol){
+                    this.simbol = simbol ||'';
+                    return this.formatear(num);
+                    }
+                }
+                $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
+                $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
+                $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
                 
                 $("#fila" + index).remove();
                 //evaluar();
@@ -1033,18 +1049,33 @@
         function agregar()
         {
    
-             producto_id= $("#producto_id").val();
-             producto= $("#producto_id option:selected").text();
-             cantidad= $("#cantidad").val();
-             precio= $("#precio").val();
-             stockpro = $("#stock").val();
-             precio_minimo= $("#precio_min").val();
-             precio_maximo= $("#precio_max").val();
-             unidad_medida= $("#medida").val();
-             valor= $("#valor").val();
-             precio_mayor= $("#precio_mayor").val();
-             cantidad_mayor= $("#cantidad_mayor").val();
-             iva=11;
+            producto_id= $("#producto_id").val();
+            producto= $("#producto_id option:selected").text();
+            cantidad= $("#cantidad").val();
+            recargo= $("#recargo").val();
+            console.log("recargo: "+recargo);
+            if(recargo == 0)
+            {
+                precio= $("#precio").val();
+            }
+            else
+            {
+                precio= $("#precio_recargo").val();
+            } 
+            stockpro = $("#stock").val();
+            precio_minimo= $("#precio_min").val();
+            precio_maximo= $("#precio_max").val();
+            unidad_medida= $("#medida").val();
+            valor= 1;
+            precio_mayor= $("#precio_mayor").val();
+            cantidad_mayor= $("#cantidad_mayor").val();
+            iva=11;
+            dolar= $("#dolVenta").val();
+            dolar = dolar.replaceAll(".","");
+            peso= $("#psVenta").val();
+            peso = peso.replaceAll(".","");
+            real= $("#rsVenta").val();
+            real = real.replaceAll(".","");
              if(parseFloat(stockpro) < parseFloat(cantidad)){
                 
                 Swal.fire({
@@ -1147,20 +1178,43 @@
             }
         }
    
-           $("#total_html").html("USD. " + formatNumber.new(total));
-           $("#total").html("USD. " + total);
-           //total_iva=total*iva/100;
-           total_iva=Math.round(total/iva);
-           total_pagar=total;
-           $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
-           $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
-           $("#total_pagar").val(total_pagar);
-           $("#total_iva").val(total_iva);
+        $("#total_html").html("USD. " + formatNumber.new(total));
+        $("#total").html("USD. " + total);
+        //total_iva=total*iva/100;
+        total_iva=Math.round(total/iva);
+        total_pagar=total;
+        $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
+        $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
+        $("#total_pagar").val(total_pagar);
+        $("#total_iva").val(total_iva);
 
-           //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-           $("#total_apag").val(formatNumber.new(total_pagar));
-           $("#total_pagadof").val(formatNumber.new(total_pagar));
-           
+        //TOTAL PARA EL DETALLE DE COBRO total_pagadof
+        $("#total_apag").val(formatNumber.new(total_pagar));
+        $("#total_pagadof").val(formatNumber.new(total_pagar));
+        //TOTALES EN LAS OTRAS MONEDAS
+        var formatNumberGS = {
+                    separador: ".", // separador para los miles
+                    sepDecimal: ',', // separador para los decimales
+                    formatear:function (num){
+                    num +='';
+                    var splitStr = num.split('.');
+                    var splitLeft = splitStr[0];
+                    //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                    var regx = /(\d+)(\d{3})/;
+                    while (regx.test(splitLeft)) {
+                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                    }
+                    return this.simbol + splitLeft;
+                    },
+                    new:function(num, simbol){
+                    this.simbol = simbol ||'';
+                    return this.formatear(num);
+                    }
+                }
+        $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
+        $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
+        $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
+        
         }
    
         function eliminar(index){
@@ -1185,19 +1239,42 @@
             }
         }
    
-           total=total-subtotal[index];
-           //total_iva= total*11/100;
-           total_iva=Math.round(total/iva);
-           total_pagar_html = total;
-          
-           $("#total_html").html("USD." + total);
-           $("#total_iva_html").html("USD." + total_iva);
-           $("#total_pagar_html").html("USD." + total_pagar_html);
-           $("#total_pagar").val(total_pagar_html);
+            total=total-subtotal[index];
+            //total_iva= total*11/100;
+            total_iva=Math.round(total/iva);
+            total_pagar_html = total;
+            
+            $("#total_html").html("USD." + total);
+            $("#total_iva_html").html("USD." + total_iva);
+            $("#total_pagar_html").html("USD." + total_pagar_html);
+            $("#total_pagar").val(total_pagar_html);
 
-           //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-           $("#total_apag").val(formatNumber.new(total));
-           $("#total_pagadof").val(formatNumber.new(total));
+            //TOTAL PARA EL DETALLE DE COBRO total_pagadof
+            $("#total_apag").val(formatNumber.new(total));
+            $("#total_pagadof").val(formatNumber.new(total));
+            //TOTALES EN LAS OTRAS MONEDAS
+            var formatNumberGS = {
+                        separador: ".", // separador para los miles
+                        sepDecimal: ',', // separador para los decimales
+                        formatear:function (num){
+                        num +='';
+                        var splitStr = num.split('.');
+                        var splitLeft = splitStr[0];
+                        //var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                        var regx = /(\d+)(\d{3})/;
+                        while (regx.test(splitLeft)) {
+                        splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                        }
+                        return this.simbol + splitLeft;
+                        },
+                        new:function(num, simbol){
+                        this.simbol = simbol ||'';
+                        return this.formatear(num);
+                        }
+                    }
+            $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
+            $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
+            $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
           
            $("#fila" + index).remove();
            //evaluar();

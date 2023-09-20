@@ -9,9 +9,9 @@
     </div>
 
     <div class="row mb-4">
-                <label class="col-md-3 form-control-label" for="email">Correo</label>
+                <label class="col-md-3 form-control-label" for="email">Usuario</label>
                 <div class="col-sm-9">                 
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el correo">      
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el correo">      
                 </div>
     </div>
 

@@ -33,36 +33,61 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         
-        if (view()->exists($request->path())) {
+        if (view()->exists($request->path())) 
+        {
             /*listar las clientes en ventana modal*/
-        $clientes=DB::table('clientes')->get();
-       
-        /*listar los productos en ventana modal*/
-        $productos=DB::table('productos as p')
-        ->select(DB::raw('CONCAT(p.ArtCode," ",p.descripcion) AS producto'),'p.id')
-        ->get(); 
+        
+            // $clientes=DB::table('clientes')->get();
+        
+            // /*listar los productos en ventana modal*/
+            // $productos=DB::table('productos as p')
+            // ->select(DB::raw('CONCAT(p.ArtCode," ",p.descripcion) AS producto'),'p.id')
+            // ->get(); 
 
-        $nro_factura = DB::table('ventas as v')
-        ->select(DB::raw('MAX(v.fact_nro) as fact_nro'))
-        ->where('v.estado','=',0)
-        ->get();
+            // $nro_factura = DB::table('ventas as v')
+            // ->select(DB::raw('MAX(v.fact_nro) as fact_nro'))
+            // ->where('v.estado','=',0)
+            // ->get();
 
-        $bancos=DB::table('bancos')
-        ->select('bancos.id','bancos.descripcion')
-        ->get();
+            // $bancos=DB::table('bancos')
+            // ->select('bancos.id','bancos.descripcion')
+            // ->get();
 
-        $cuentas=DB::table('cuentas_corriente as cc')
-        ->join('bancos as b','b.id','=','cc.banco_id')
-        ->select('cc.id','cc.nro_cuenta','cc.banco_id','b.descripcion as banco')
-        ->get();
-        //dd($nro_factura);
+            // $cuentas=DB::table('cuentas_corriente as cc')
+            // ->join('bancos as b','b.id','=','cc.banco_id')
+            // ->select('cc.id','cc.nro_cuenta','cc.banco_id','b.descripcion as banco')
+            // ->get();
+            // //dd($nro_factura);
 
-        // return Redirect::to('factura.create',["clientes"=>$clientes,"productos"=>$productos,
-        // "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas]);
-        return Redirect::to('factura/create')
-        ->with("clientes",$clientes)->with("productos",$productos)
-        ->with("nro_factura",$nro_factura)->with("bancos",$bancos)
-        ->with("cuentas",$cuentas);
+            // // return Redirect::to('factura.create',["clientes"=>$clientes,"productos"=>$productos,
+            // // "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas]);
+            // return Redirect::to('factura/create')
+            // ->with("clientes",$clientes)->with("productos",$productos)
+            // ->with("nro_factura",$nro_factura)->with("bancos",$bancos)
+            // ->with("cuentas",$cuentas);
+
+            //PEDIR COTIZACIÓN ANTES DE EMPEZAR
+            $fecha_hoy = Carbon::now('America/Asuncion');
+            $fecha_hoy = $fecha_hoy->format('Y-m-d');
+
+            $dolar=DB::table('cotizaciones as c')
+            //->join('empresas','clientes.idempresa','=','empresas.id')
+            ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+            'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+            ->where('fecha','=',$fecha_hoy)
+            ->first();
+            //dd($cotizacion);
+            if($dolar==null)
+            {
+                $cotizaciones=DB::table('cotizaciones as c')
+                //->join('empresas','clientes.idempresa','=','empresas.id')
+                ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+                'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+                ->orderBy('c.fecha','desc')
+                ->get();
+                //return view('cotizacion.index',["cotizaciones"=>$cotizaciones])->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
+                return Redirect::to("cotizacion")->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
+            }
         }
         return abort(404);
     }
@@ -70,32 +95,55 @@ class HomeController extends Controller
     public function root()
     {
         /*listar las clientes en ventana modal*/
-        $clientes=DB::table('clientes')->get();
+        // $clientes=DB::table('clientes')->get();
        
-        /*listar los productos en ventana modal*/
-        $productos=DB::table('productos as p')
-        ->select(DB::raw('CONCAT(p.ArtCode," ",p.descripcion) AS producto'),'p.id')
-        ->get(); 
+        // /*listar los productos en ventana modal*/
+        // $productos=DB::table('productos as p')
+        // ->select(DB::raw('CONCAT(p.ArtCode," ",p.descripcion) AS producto'),'p.id')
+        // ->get(); 
 
-        $nro_factura = DB::table('ventas as v')
-        ->select(DB::raw('MAX(v.fact_nro) as fact_nro'))
-        ->where('v.estado','=',0)
-        ->get();
+        // $nro_factura = DB::table('ventas as v')
+        // ->select(DB::raw('MAX(v.fact_nro) as fact_nro'))
+        // ->where('v.estado','=',0)
+        // ->get();
 
-        $bancos=DB::table('bancos')
-        ->select('bancos.id','bancos.descripcion')
-        ->get();
+        // $bancos=DB::table('bancos')
+        // ->select('bancos.id','bancos.descripcion')
+        // ->get();
 
-        $cuentas=DB::table('cuentas_corriente as cc')
-        ->join('bancos as b','b.id','=','cc.banco_id')
-        ->select('cc.id','cc.nro_cuenta','cc.banco_id','b.descripcion as banco')
-        ->get();
-        //dd($nro_factura);
+        // $cuentas=DB::table('cuentas_corriente as cc')
+        // ->join('bancos as b','b.id','=','cc.banco_id')
+        // ->select('cc.id','cc.nro_cuenta','cc.banco_id','b.descripcion as banco')
+        // ->get();
+        // //dd($nro_factura);
 
-        return Redirect::to('factura/create')
-        ->with("clientes",$clientes)->with("productos",$productos)
-        ->with("nro_factura",$nro_factura)->with("bancos",$bancos)
-        ->with("cuentas",$cuentas);
+        // return Redirect::to('factura/create')
+        // ->with("clientes",$clientes)->with("productos",$productos)
+        // ->with("nro_factura",$nro_factura)->with("bancos",$bancos)
+        // ->with("cuentas",$cuentas);
+
+         //PEDIR COTIZACIÓN ANTES DE EMPEZAR
+         $fecha_hoy = Carbon::now('America/Asuncion');
+         $fecha_hoy = $fecha_hoy->format('Y-m-d');
+
+         $dolar=DB::table('cotizaciones as c')
+         //->join('empresas','clientes.idempresa','=','empresas.id')
+         ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+         'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+         ->where('fecha','=',$fecha_hoy)
+         ->first();
+         //dd($cotizacion);
+         if($dolar==null)
+         {
+             $cotizaciones=DB::table('cotizaciones as c')
+             //->join('empresas','clientes.idempresa','=','empresas.id')
+             ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
+             'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
+             ->orderBy('c.fecha','desc')
+             ->get();
+             //return view('cotizacion.index',["cotizaciones"=>$cotizaciones])->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
+             return Redirect::to("cotizacion")->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
+         }
     }
 
     /*Language Translation*/
