@@ -80,7 +80,7 @@
                                             <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="username" class="form-label">Usuario</label>
+                                                    <label for="username" class="form-label">Email</label>
                                                     <input name="email" type="text"
                                                         class="form-control @error('email') is-invalid @enderror"
                                                          id="username"

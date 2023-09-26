@@ -85,7 +85,7 @@
                         <form id="form_mora" action="{{route('factura.store')}}" method="POST"> 
                         <input hidden type="text" id="contable" name="contable" value=0 class="form-control">
                         <div class="form-group row">
-                            <div class="col-md-4">
+                            <div hidden class="col-md-4">
                                 <label class="col-md-5 form-control-label" for="precio">Buscador</label>
                                 <div class="mb-3">
                                     <input autofocus type="text" id="buscador" name="buscador" class="form-control">

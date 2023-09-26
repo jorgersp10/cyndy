@@ -3,7 +3,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="/index" class="logo logo-dark">
+                <a class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('/assets/images/inox.png') }}" alt="" height="15">
                     </span>
@@ -12,7 +12,7 @@
                     </span>
                 </a>
 
-                <a href="/index" class="logo logo-light">
+                <a class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('/assets/images/inox.png') }}" alt="" height="15">
                     </span>

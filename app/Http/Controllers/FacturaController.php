@@ -330,6 +330,9 @@ class FacturaController extends Controller
             $venta->cotiz_id = $cotizaciones->id;
             //dd($venta);
             $venta->save();
+            if (($request->total_pagar) == null){
+                return back()->with('msj', 'FAVOR AGREGAR LOS DETALLES DE LA VENTA');
+            }
             //dd($request->total_pagar);
             $producto_id=$request->producto_id;
             $cantidad = str_replace(",", ".", $request->cantidad);
@@ -337,6 +340,10 @@ class FacturaController extends Controller
             $precio=str_replace(",",".",$request->precio);
         
             $cont=0;
+            //dd($producto_id);
+            if (($producto_id) == null){
+                return back()->with('msj', 'FAVOR AGREGAR LOS DETALLES DE LA VENTA');
+            }
 
             while($cont < count($producto_id)){
 
@@ -651,22 +658,23 @@ class FacturaController extends Controller
         $fpdf->Ln(6);
         $fpdf->Cell(60,0,'','T');
         $fpdf->Ln(2);    
-        $fpdf->Cell(25, 10, 'TOTAL USD. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL USD. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
         $fpdf->Ln(3); 
-        $fpdf->Cell(25, 10, 'TOTAL Gs. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL Gs. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL $. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL $. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL R$. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL R$. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
-
+        $fpdf->Ln(4);
+        $fpdf->Cell(50, 10, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
         //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
         //$fpdf->Output('ficha.pdf','F');
         $fpdf->Output("I");
@@ -750,22 +758,23 @@ class FacturaController extends Controller
         $fpdf->Ln(6);
         $fpdf->Cell(60,0,'','T');
         $fpdf->Ln(2);    
-        $fpdf->Cell(25, 10, 'TOTAL USD. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL USD. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
         $fpdf->Ln(3); 
-        $fpdf->Cell(25, 10, 'TOTAL Gs. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL Gs. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL $. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL $. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL R$. SIN I.V.A.', 0);    
+        $fpdf->Cell(25, 10, 'TOTAL R$. ', 0);    
         $fpdf->Cell(20, 10, '', 0);
         $fpdf->Cell(15, 10, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
-
+        $fpdf->Ln(4);
+        $fpdf->Cell(50, 10, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
         //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
         //$fpdf->Output('ficha.pdf','F');
         $fpdf->Output("I");

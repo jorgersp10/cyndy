@@ -88,6 +88,10 @@ class HomeController extends Controller
                 //return view('cotizacion.index',["cotizaciones"=>$cotizaciones])->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
                 return Redirect::to("cotizacion")->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
             }
+            else
+            {
+                return Redirect::to("factura/create");
+            }
         }
         return abort(404);
     }
@@ -144,6 +148,10 @@ class HomeController extends Controller
              //return view('cotizacion.index',["cotizaciones"=>$cotizaciones])->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
              return Redirect::to("cotizacion")->with('msj', 'FAVOR CARGAR LA COTIZACIÓN DEL DÍA');
          }
+         else
+            {
+                return Redirect::to("factura/create");
+            }
     }
 
     /*Language Translation*/
