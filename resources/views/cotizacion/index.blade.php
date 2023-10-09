@@ -39,9 +39,9 @@
                     <div class="card-body">
                         <div class="table-rep-plugin">
                             <div class="table-responsive mb-0" data-pattern="priority-columns">
-                                <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">                                                            
-                                    <thead>                            
-                                            <tr>        
+                                <table id="tech-companies-1" class="table table-striped">                             
+                                    <thead>                                                        
+                                        <tr>        
                                             <th  data-priority="1">Borrar</th>
                                             <th  data-priority="1">Fecha</th> 
                                             {{-- <th  data-priority="1">USD Compra</th>  --}}
@@ -63,10 +63,10 @@
                                                 </td>               
                                                 <td>{{ date('d-m-Y', strtotime($cot->fecha)) }}</td>
                                                 {{-- <td>{{number_format(($cot->dolCompra), 0, ",", ".")}}</td> --}}
-                                                <td>{{number_format(($cot->dolVenta), 2, ",", ".")}}</td>
+                                                <td>{{number_format(($cot->dolVenta), 0, ",", ".")}}</td>
                                                 {{-- <td>{{number_format(($cot->psCompra), 0, ",", ".")}}</td> --}}
                                                 <td>{{number_format(($cot->psVenta), 2, ",", ".")}}</td>
-                                                {{-- <td>{{number_format(($cot->rsCompra), 0, ",", ".")}}</td> --}}
+                                                {{-- <td>{{number_format(($cot->rsCompra), 0, ".", ",")}}</td> --}}
                                                 <td>{{number_format(($cot->rsVenta), 2, ",", ".")}}</td>                                                                                                           
                                             </tr>  
                                             @include('cotizacion.delete')
