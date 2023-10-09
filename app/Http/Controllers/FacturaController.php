@@ -605,35 +605,35 @@ class FacturaController extends Controller
         /*mostrar detalles*/
         $detallesVenta=DB::table('ventas_det as vdet')
         ->join('productos as p','vdet.producto_id','=','p.id')
-        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto')
+        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto','p.cod_barra as codigo')
         ->where('vdet.venta_id','=',$id)
         ->orderBy('vdet.id', 'desc')->get();
         
         //CREAMOS EL TICKET
-        $fpdf = new Fpdf('P','mm',array(80,150));
+        $fpdf = new Fpdf('P','mm',array(70,150));
         $fpdf->AddPage();
         // CABECERA
-        $fpdf->SetFont('Helvetica','',12);
-        $fpdf->Cell(60,4,'Taty e hijos S.A. Suc. II',0,1,'C');
-        $fpdf->Ln(1);
         $fpdf->SetFont('Helvetica','',8);
+        $fpdf->Cell(40,4,'Taty e hijos S.A. Suc. II',0,1,'C');
+        $fpdf->Ln(1);
+        $fpdf->SetFont('Helvetica','',7);
         // $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
         // $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
         // $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
         // DATOS FACTURA        
         $fpdf->Ln(2);
-        $fpdf->Cell(60,4,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
-        $fpdf->Cell(60,4,'Cliente: '.$cabVenta->nombre,0,1,'');
-        $fpdf->Cell(60,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
+        $fpdf->Cell(10,3,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
+        $fpdf->Cell(10,4,'Cliente: '.$cabVenta->nombre,0,1,'');
+        $fpdf->Cell(10,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
         $fpdf->Ln(0);
         // COLUMNAS
         $fpdf->SetFont('Helvetica', 'B', 7);
-        $fpdf->Cell(30, 10, 'Articulo', 0);
+        $fpdf->Cell(20, 10, 'Articulo', 0);
         $fpdf->Cell(5, 10, 'Ud',0,0,'R');
         $fpdf->Cell(10, 10, 'Precio',0,0,'R');
         $fpdf->Cell(15, 10, 'Total',0,0,'R');
         $fpdf->Ln(8);
-        $fpdf->Cell(60,0,'','T');
+        $fpdf->Cell(50,0,'','T');
         $fpdf->Ln(0);                  
         
         $total_deuda=0;
@@ -642,9 +642,9 @@ class FacturaController extends Controller
 
         foreach($detallesVenta as $row)
         {
-            $fpdf->SetFont('Helvetica', '', 7);
-            $fpdf->MultiCell(30,4,$row->producto,0,'L'); 
-            $fpdf->Cell(35, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->SetFont('Helvetica', '', 6);
+            $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
             $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
             $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
             $fpdf->Ln(3);
@@ -656,25 +656,25 @@ class FacturaController extends Controller
         $totalRs = $cabVenta->total * ($cabVenta->dolVenta / $cabVenta->rsVenta);
         // SUMATORIO DE LOS PRODUCTOS Y EL IVA
         $fpdf->Ln(6);
-        $fpdf->Cell(60,0,'','T');
+        $fpdf->Cell(50,0,'','T');
         $fpdf->Ln(2);    
-        $fpdf->Cell(25, 10, 'TOTAL USD. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
         $fpdf->Ln(3); 
-        $fpdf->Cell(25, 10, 'TOTAL Gs. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL $. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL R$. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(4);
-        $fpdf->Cell(50, 10, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+        $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
         //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
         //$fpdf->Output('ficha.pdf','F');
         $fpdf->Output("I");
@@ -703,12 +703,12 @@ class FacturaController extends Controller
         /*mostrar detalles*/
         $detallesVenta=DB::table('ventas_det as vdet')
         ->join('productos as p','vdet.producto_id','=','p.id')
-        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto')
+        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto','p.cod_barra as codigo')
         ->where('vdet.venta_id','=',$venta_id)
         ->orderBy('vdet.id', 'desc')->get();
         
         //CREAMOS EL TICKET
-        $fpdf = new Fpdf('P','mm',array(80,150));
+        $fpdf = new Fpdf('P','mm',array(70,150));
         $fpdf->AddPage();
         // CABECERA
         $fpdf->SetFont('Helvetica','',12);
@@ -742,7 +742,7 @@ class FacturaController extends Controller
         foreach($detallesVenta as $row)
         {
             $fpdf->SetFont('Helvetica', '', 7);
-            $fpdf->MultiCell(30,4,$row->producto,0,'L'); 
+            $fpdf->MultiCell(30,4,$row->codigo,0,'L'); 
             $fpdf->Cell(35, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
             $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
             $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');

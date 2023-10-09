@@ -53,7 +53,7 @@
                                     <input type="text" id="fact_compra" name="fact_compra" class="form-control" placeholder="Ingrese nro de factura" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div hidden class="col-md-4">
                                 <label class="col-md-5 form-control-label" for="precio">Tildar si tiene valor contable</label>
                                 <div class="col-sm-3 form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="contable" name="contable">

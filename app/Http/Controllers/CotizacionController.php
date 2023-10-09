@@ -49,14 +49,14 @@ class cotizacionController extends Controller
     {
         $cotizacion= new Cotizacion();        
         //$cotizacion->moneda = $request->moneda;
-        $cotizacion->dolCompra =str_replace(".","",$request->dolCompra);
-        $cotizacion->dolVenta =str_replace(".","",$request->dolVenta);
+        $cotizacion->dolCompra =0;
+        $cotizacion->dolVenta =$request->dolVenta;
 
-        $cotizacion->psCompra =str_replace(".","",$request->psCompra);
-        $cotizacion->psVenta =str_replace(".","",$request->psVenta);
+        $cotizacion->psCompra =0;
+        $cotizacion->psVenta =$request->psVenta;
 
-        $cotizacion->rsCompra =str_replace(".","",$request->rsCompra);
-        $cotizacion->rsVenta =str_replace(".","",$request->rsVenta);
+        $cotizacion->rsCompra =0;
+        $cotizacion->rsVenta =$request->rsVenta;
 
         $fecha_hoy= isset($request->fecha) ? $request->fecha :Carbon::now('America/Asuncion');
         $cotizacion->fecha = $fecha_hoy;

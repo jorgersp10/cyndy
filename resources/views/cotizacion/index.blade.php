@@ -44,11 +44,11 @@
                                             <tr>        
                                             <th  data-priority="1">Borrar</th>
                                             <th  data-priority="1">Fecha</th> 
-                                            <th  data-priority="1">USD Compra</th> 
+                                            {{-- <th  data-priority="1">USD Compra</th>  --}}
                                             <th  data-priority="1">USD Venta</th>
-                                            <th  data-priority="1">PS Compra</th> 
+                                            {{-- <th  data-priority="1">PS Compra</th>  --}}
                                             <th  data-priority="1">PS Venta</th>
-                                            <th  data-priority="1">RS Compra</th> 
+                                            {{-- <th  data-priority="1">RS Compra</th>  --}}
                                             <th  data-priority="1">RS Venta</th>
                                         </tr>
                                     </thead>
@@ -62,12 +62,12 @@
                                                     </button>                                    
                                                 </td>               
                                                 <td>{{ date('d-m-Y', strtotime($cot->fecha)) }}</td>
-                                                <td>{{number_format(($cot->dolCompra), 0, ",", ".")}}</td>
-                                                <td>{{number_format(($cot->dolVenta), 0, ",", ".")}}</td>
-                                                <td>{{number_format(($cot->psCompra), 0, ",", ".")}}</td>
-                                                <td>{{number_format(($cot->psVenta), 0, ",", ".")}}</td>
-                                                <td>{{number_format(($cot->rsCompra), 0, ",", ".")}}</td>
-                                                <td>{{number_format(($cot->rsVenta), 0, ",", ".")}}</td>                                                                                                           
+                                                {{-- <td>{{number_format(($cot->dolCompra), 0, ",", ".")}}</td> --}}
+                                                <td>{{number_format(($cot->dolVenta), 2, ",", ".")}}</td>
+                                                {{-- <td>{{number_format(($cot->psCompra), 0, ",", ".")}}</td> --}}
+                                                <td>{{number_format(($cot->psVenta), 2, ",", ".")}}</td>
+                                                {{-- <td>{{number_format(($cot->rsCompra), 0, ",", ".")}}</td> --}}
+                                                <td>{{number_format(($cot->rsVenta), 2, ",", ".")}}</td>                                                                                                           
                                             </tr>  
                                             @include('cotizacion.delete')
                                         @endforeach

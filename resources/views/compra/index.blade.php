@@ -63,7 +63,7 @@
                                             <th  data-priority="1">Proveedor</th>
                                             <th  data-priority="1">Total</th>
                                             <th  data-priority="1">Est. Pago</th>
-                                            <th  data-priority="1">Contable</th>
+                                            {{-- <th  data-priority="1">Contable</th> --}}
                                             <th  data-priority="1">Estado</th>
                                             <th  data-priority="1">Cambiar Estado</th>
                                             {{-- <th  data-priority="1">Acción</th> --}}
@@ -114,7 +114,7 @@
                                                     
                                                 </td>
 
-                                                <td>
+                                                {{-- <td>
                                                     @if($co->contable==0)
                                                         <button type="button" class="btn btn-danger btn-sm" data-id_compra="{{$co->id}}" data-bs-toggle="modal" data-bs-target="#cambiarCompraContable">
                                                             <i class="fa fa-times fa-1x"></i> No Contable
@@ -127,7 +127,7 @@
                                                         </button>
                                                     @endif
                                                 
-                                                </td>
+                                                </td> --}}
                                                     
                                                     <td>
                                                          @if($co->estado==0)
