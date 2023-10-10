@@ -93,6 +93,47 @@
 
                 <div class="card">
                     <div class="card-header">
+                       <h2>Comisión de Vendedores/as por rango de fecha</h2><br/>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <form id="detalle_pdf" action="{{route('reporteComisionPDF')}}" method="POST"target="_blank">
+                                {{csrf_field()}}
+                                <!-- FECHAS DE INICIO Y FIN  -->
+                                <div class="row mb-2">
+                                    <label for="horizontal-firstname-input" class="col-sm-1 col-form-label">Inicio</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" id="fecha1" name="fecha1" class="form-control">
+                                    </div>
+                                    <label for="horizontal-firstname-input" class="col-sm-1 col-form-label">Fin</label>
+                                    <div class="col-sm-3">
+                                        <input type="date" id="fecha2" name="fecha2" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label for="horizontal-firstname-input" class="col-sm-5 col-form-label">Vendedor/a</label>
+                                    <div class="mb-3">
+                                        <select style= "width:280px" class="form-control" name="vendedor_id" id="vendedor_id">  
+                                            <option value="0">Seleccione</option>                     
+                                            @foreach($vendedores as $v)                                    
+                                                <option value="{{$v->id}}">{{$v->nombre}}</option>                                        
+                                            @endforeach
+                                        </select>                                
+                                    </div>
+                                </div>
+                                <!-- SUCURSALES -->
+                                <div>
+                                    <button type="submit" class="btn btn-danger float-left"><i class="fa fa-file fa-1x"></i> Generar PDF</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                        <h2>Ventas por rango de fecha</h2><br/>
                     </div>
                     <div class="card-body">
@@ -183,7 +224,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                       <h2>Productos mas vendidos (MONTO EN GS) por rango de fecha</h2><br/>
+                       <h2>Productos mas vendidos (MONTO EN USD) por rango de fecha</h2><br/>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">

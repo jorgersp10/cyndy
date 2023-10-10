@@ -20,7 +20,7 @@ class cotizacionController extends Controller
             //->join('empresas','clientes.idempresa','=','empresas.id')
             ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
             'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
-            ->orderBy('c.fecha','desc')
+            ->orderBy('c.id','desc')
             ->get();
 
             //dd($cotizaciones);

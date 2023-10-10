@@ -209,15 +209,15 @@
                 <td >TOTALES $</td>                             
                 <td></td>
                 <td></td>                             
-                <td>$. {{number_format(($total_iva * ($v->dolVenta / $v->psVenta)), 0, ",", ".")}}</td>
-                <td>$. {{number_format(($total_venta * ($v->dolVenta / $v->psVenta)), 0, ",", ".")}}</td>                                                                     
+                <td>$. {{number_format(($total_iva * ($v->psVenta)), 0, ",", ".")}}</td>
+                <td>$. {{number_format(($total_venta * ($v->psVenta)), 0, ",", ".")}}</td>                                                                     
             </tr>
             <tr id="totales">       
                 <td >TOTALES R$</td>                             
                 <td></td>
                 <td></td>                             
-                <td>R$. {{number_format(($total_iva * ($v->dolVenta / $v->rsVenta)), 0, ",", ".")}}</td>
-                <td>R$. {{number_format(($total_venta * ($v->dolVenta / $v->rsVenta)), 0, ",", ".")}}</td>                                                                     
+                <td>R$. {{number_format(($total_iva * ($v->rsVenta)), 2, ",", ".")}}</td>
+                <td>R$. {{number_format(($total_venta * ($v->rsVenta)), 2, ",", ".")}}</td>                                                                     
             </tr>
             </table>
            

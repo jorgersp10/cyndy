@@ -58,13 +58,16 @@ class FacturaController extends Controller
             ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
             ->join('clientes as c','c.id','=','v.cliente_id')
             ->join('users as u','u.id','=','v.user_id')
-             ->select('v.id','v.fact_nro','v.iva5','v.iva10','v.ivaTotal','v.exenta','v.fecha',
-             'v.total','v.estado','c.nombre','v.contable','v.nro_recibo')
+            ->join('vendedores as ven','ven.id','=','v.vendedor_id')
+            ->select('v.id','v.fact_nro','v.iva5','v.iva10','v.ivaTotal','v.exenta','v.fecha',
+             'v.total','v.estado','c.nombre','v.contable','v.nro_recibo','ven.id as vendedor_id',
+             'ven.nombre as vendedor')
             ->where('v.fact_nro','LIKE','%'.$sql.'%')
             ->orwhere('c.nombre','LIKE','%'.$sql.'%')
             ->orderBy('v.id','desc')
             ->groupBy('v.id','v.fact_nro','v.iva5','v.iva10','v.ivaTotal','v.exenta','v.fecha',
-            'v.total','v.estado','c.nombre','v.contable','v.nro_recibo')
+            'v.total','v.estado','c.nombre','v.contable','v.nro_recibo','ven.id',
+            'ven.nombre')
             ->paginate(10);
 
             $fecha_iva = DB::table('iva_param as i')
@@ -107,9 +110,15 @@ class FacturaController extends Controller
             'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
             ->orderBy('c.fecha','desc')
             ->first();
+
+            $vendedores=DB::table('vendedores as v')
+            ->select('v.id','v.nombre','v.num_documento')
+            ->orderBy('v.nombre','asc')
+            ->get();
  
             return view('factura.index',["ventas"=>$ventas,"total_venta"=>$total_venta,"total_venta"=>$total_venta,
-            "total_compra_gasto"=>$total_compra_gasto,"saldoFactura"=>$saldoFactura,"cotizaciones"=>$cotizaciones,"buscarTexto"=>$sql]);
+            "total_compra_gasto"=>$total_compra_gasto,"saldoFactura"=>$saldoFactura,
+            "cotizaciones"=>$cotizaciones,"vendedores"=>$vendedores,"buscarTexto"=>$sql]);
             
            //return $compras;
         }
@@ -143,12 +152,18 @@ class FacturaController extends Controller
         //->join('empresas','clientes.idempresa','=','empresas.id')
         ->select('c.id','c.moneda','c.dolCompra','c.dolVenta',
         'psCompra','psVenta','rsCompra','rsVenta','c.fecha','c.estado')
-        ->orderBy('c.fecha','desc')
+        ->orderBy('c.id','desc')
         ->first();
+
+        $vendedores=DB::table('vendedores as v')
+        ->select('v.id','v.nombre','v.num_documento')
+        ->orderBy('v.nombre','asc')
+        ->get();
         //dd($nro_factura);
 
         return view('factura.create',["clientes"=>$clientes,"productos"=>$productos,
-        "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,"cotizaciones"=>$cotizaciones]);
+        "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,
+        "cotizaciones"=>$cotizaciones,"vendedores"=>$vendedores]);
 
    }
 
@@ -259,6 +274,10 @@ class FacturaController extends Controller
         ->orderby('c.id','desc')
         ->first();
 
+        $vendedores=DB::table('vendedores as v')
+        ->select('v.id','v.nombre','v.num_documento')
+        ->orderBy('v.nombre','asc')
+        ->get();
 
         $fechaEmision= Carbon::now('America/Asuncion');
 
@@ -328,6 +347,7 @@ class FacturaController extends Controller
             $venta->expendio_nro = $timbrados[0]->nrof_expendio;
             $venta->contable = $request->contable;
             $venta->cotiz_id = $cotizaciones->id;
+            $venta->vendedor_id = $request->vendedor_id;
             //dd($venta);
             $venta->save();
             if (($request->total_pagar) == null){
@@ -450,7 +470,8 @@ class FacturaController extends Controller
 
             //$this->imprimirTicket($venta->id);
             return view('factura.create',["clientes"=>$clientes,"productos"=>$productos,
-                "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,"cotizaciones"=>$cotizaciones]);
+            "nro_factura"=>$nro_factura,"bancos"=>$bancos,"cuentas"=>$cuentas,
+            "cotizaciones"=>$cotizaciones,"vendedores"=>$vendedores]);
            // return redirect()->route('imprimirTicket', ['id' => $venta->id]);
 
         } catch(Exception $e){
@@ -610,13 +631,13 @@ class FacturaController extends Controller
         ->orderBy('vdet.id', 'desc')->get();
         
         //CREAMOS EL TICKET
-        $fpdf = new Fpdf('P','mm',array(70,150));
+        $fpdf = new Fpdf('P','mm',array(75,200));
         $fpdf->AddPage();
         // CABECERA
-        $fpdf->SetFont('Helvetica','',8);
+        $fpdf->SetFont('Helvetica','',10);
         $fpdf->Cell(40,4,'Taty e hijos S.A. Suc. II',0,1,'C');
         $fpdf->Ln(1);
-        $fpdf->SetFont('Helvetica','',7);
+        $fpdf->SetFont('Helvetica','',8);
         // $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
         // $fpdf->Cell(60,4,'Calle Argentina, Arroyo Pora, Encarnacion',0,1,'C');
         // $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
@@ -627,33 +648,45 @@ class FacturaController extends Controller
         $fpdf->Cell(10,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
         $fpdf->Ln(0);
         // COLUMNAS
-        $fpdf->SetFont('Helvetica', 'B', 7);
+        $fpdf->SetFont('Helvetica', 'B', 8);
         $fpdf->Cell(20, 10, 'Articulo', 0);
         $fpdf->Cell(5, 10, 'Ud',0,0,'R');
         $fpdf->Cell(10, 10, 'Precio',0,0,'R');
         $fpdf->Cell(15, 10, 'Total',0,0,'R');
         $fpdf->Ln(8);
         $fpdf->Cell(50,0,'','T');
-        $fpdf->Ln(0);                  
+        $fpdf->Ln(0);                      
         
         $total_deuda=0;
         $total_pagos=0;
         $total_vencido=0;
+        $total_cantidad=0;
 
         foreach($detallesVenta as $row)
         {
-            $fpdf->SetFont('Helvetica', '', 6);
+            $fpdf->SetFont('Helvetica', '', 7);
             $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
             $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
             $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
             $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
             $fpdf->Ln(3);
+
+            $total_cantidad = $total_cantidad + $row->cantidad;
             
-        }        
+        }  
+        $fpdf->Cell(50,0,'','T');
+        $fpdf->Ln(1);
         //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
         $totalGs = $cabVenta->total * $cabVenta->dolVenta;
-        $totalPs = $cabVenta->total * ($cabVenta->dolVenta / $cabVenta->psVenta);
-        $totalRs = $cabVenta->total * ($cabVenta->dolVenta / $cabVenta->rsVenta);
+        $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+        $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+        
+        $fpdf->SetFont('Helvetica', '', 7);
+        $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+        $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(10, -5, "-",0,0,'R');
+        $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+        
         // SUMATORIO DE LOS PRODUCTOS Y EL IVA
         $fpdf->Ln(6);
         $fpdf->Cell(50,0,'','T');
@@ -668,11 +701,11 @@ class FacturaController extends Controller
         $fpdf->Ln(3);
         $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
         $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
         $fpdf->Ln(3);
         $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
         $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
         $fpdf->Ln(4);
         $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
         //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
@@ -708,11 +741,11 @@ class FacturaController extends Controller
         ->orderBy('vdet.id', 'desc')->get();
         
         //CREAMOS EL TICKET
-        $fpdf = new Fpdf('P','mm',array(70,150));
+        $fpdf = new Fpdf('P','mm',array(75,200));
         $fpdf->AddPage();
         // CABECERA
-        $fpdf->SetFont('Helvetica','',12);
-        $fpdf->Cell(60,4,'Taty e hijos S.A. Suc. II',0,1,'C');
+        $fpdf->SetFont('Helvetica','',10);
+        $fpdf->Cell(40,4,'Taty e hijos S.A. Suc. II',0,1,'C');
         $fpdf->Ln(1);
         $fpdf->SetFont('Helvetica','',8);
         // $fpdf->Cell(60,4,'Productos de limpieza, cobranzas y accesorios en gral.',0,1,'C');
@@ -720,61 +753,71 @@ class FacturaController extends Controller
         // $fpdf->Cell(60,4,'Celular: 0982-111970',0,1,'C');
         // DATOS FACTURA        
         $fpdf->Ln(2);
-        $fpdf->Cell(60,4,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
-        $fpdf->Cell(60,4,'Cliente: '.$cabVenta->nombre,0,1,'');
-        $fpdf->Cell(60,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
+        $fpdf->Cell(10,3,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
+        $fpdf->Cell(10,4,'Cliente: '.$cabVenta->nombre,0,1,'');
+        $fpdf->Cell(10,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
         $fpdf->Ln(0);
-
         // COLUMNAS
-        $fpdf->SetFont('Helvetica', 'B', 7);
-        $fpdf->Cell(30, 10, 'Articulo', 0);
+        $fpdf->SetFont('Helvetica', 'B', 8);
+        $fpdf->Cell(20, 10, 'Articulo', 0);
         $fpdf->Cell(5, 10, 'Ud',0,0,'R');
         $fpdf->Cell(10, 10, 'Precio',0,0,'R');
         $fpdf->Cell(15, 10, 'Total',0,0,'R');
         $fpdf->Ln(8);
-        $fpdf->Cell(60,0,'','T');
+        $fpdf->Cell(50,0,'','T');
         $fpdf->Ln(0);                  
         
         $total_deuda=0;
         $total_pagos=0;
         $total_vencido=0;
+        $total_cantidad=0;
 
         foreach($detallesVenta as $row)
         {
             $fpdf->SetFont('Helvetica', '', 7);
-            $fpdf->MultiCell(30,4,$row->codigo,0,'L'); 
-            $fpdf->Cell(35, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
             $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
             $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
             $fpdf->Ln(3);
-            
-        }       
 
+            $total_cantidad = $total_cantidad + $row->cantidad;
+            
+        }  
+        $fpdf->Cell(50,0,'','T');
+        $fpdf->Ln(1);
         //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
         $totalGs = $cabVenta->total * $cabVenta->dolVenta;
-        $totalPs = $cabVenta->total * ($cabVenta->dolVenta / $cabVenta->psVenta);
-        $totalRs = $cabVenta->total * ($cabVenta->dolVenta / $cabVenta->rsVenta);
+        $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+        $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+        
+        $fpdf->SetFont('Helvetica', '', 7);
+        $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+        $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(10, -5, "-",0,0,'R');
+        $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+        
         // SUMATORIO DE LOS PRODUCTOS Y EL IVA
         $fpdf->Ln(6);
-        $fpdf->Cell(60,0,'','T');
+        $fpdf->Cell(50,0,'','T');
         $fpdf->Ln(2);    
-        $fpdf->Cell(25, 10, 'TOTAL USD. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
         $fpdf->Ln(3); 
-        $fpdf->Cell(25, 10, 'TOTAL Gs. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL $. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
         $fpdf->Ln(3);
-        $fpdf->Cell(25, 10, 'TOTAL R$. ', 0);    
-        $fpdf->Cell(20, 10, '', 0);
-        $fpdf->Cell(15, 10, "R$. ".number_format(($totalRs), 0, ",", "."),0,0,'R');
+        $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+        $fpdf->Cell(10, 7, '', 0);
+        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
         $fpdf->Ln(4);
-        $fpdf->Cell(50, 10, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+        $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
         //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
         //$fpdf->Output('ficha.pdf','F');
         $fpdf->Output("I");
@@ -786,22 +829,36 @@ class FacturaController extends Controller
     {
 
         //dd($id);    
+        // $ventas=DB::table('ventas as v')
+        // ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
+        // ->join('clientes as c','c.id','=','v.cliente_id')
+        // ->select('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
+        // 'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo'
+        // ,DB::raw('sum(vdet.cantidad_calculo*precio) as total'))
+        // ->where('v.id','=',$id)
+        // ->orderBy('v.id', 'desc')
+        // ->groupBy('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
+        // 'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo')
+        // ->first();
+
         $ventas=DB::table('ventas as v')
         ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
         ->join('clientes as c','c.id','=','v.cliente_id')
+        ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
         ->select('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
-        'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo'
+        'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
+        'cot.dolVenta','cot.psVenta','cot.rsVenta'
         ,DB::raw('sum(vdet.cantidad_calculo*precio) as total'))
-        ->where('v.id','=',$id)
         ->orderBy('v.id', 'desc')
         ->groupBy('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
-        'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo')
+        'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
+        'cot.dolVenta','cot.psVenta','cot.rsVenta')
         ->first();
 
         /*mostrar detalles*/
         $detalles=DB::table('ventas_det as vdet')
         ->join('productos as p','vdet.producto_id','=','p.id')
-        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto')
+        ->select('vdet.cantidad','vdet.cantidad_calculo','vdet.precio','p.descripcion as producto','p.cod_barra')
         ->where('vdet.venta_id','=',$id)
         ->orderBy('vdet.id', 'desc')->get();
         

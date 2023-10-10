@@ -217,6 +217,15 @@
                         </form> 
                 </li>
 
+                <li class="nav-item">
+                    <a class="waves-effect" href="{{url('vendedor')}}" onclick="event.preventDefault(); document.getElementById('vendedor-form').submit();">
+                    <i class="fas fa-people-arrows"></i>
+                    <span>Vendedores</span></a>
+                    <form id="vendedor-form" action="{{url('vendedor')}}" method="GET" style="display: none;">
+                        {{csrf_field()}} 
+                        </form> 
+                </li>
+
                 <!-- <li class="nav-item">
                     <a class="waves-effect" href="{{url('timbrado')}}" onclick="event.preventDefault(); document.getElementById('timbrado-form').submit();">
                     <i class="fas fa-list-ol"></i>

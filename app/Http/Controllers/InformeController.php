@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Producto;
+use App\Models\Vendedor;
 use Carbon\Carbon;
 use DateTime;
 use DB;
@@ -323,7 +324,12 @@ class InformeController extends Controller
     public function reporteDetalle()
     {
 
-        return view('informe.reporteDetalle');
+        $vendedores=DB::table('vendedores as v')
+        ->select('v.id','v.nombre','v.num_documento')
+        ->orderBy('v.nombre','asc')
+        ->get();
+
+        return view('informe.reporteDetalle',["vendedores"=>$vendedores]);
 
     }
 
@@ -383,6 +389,62 @@ class InformeController extends Controller
             "moneda" => $moneda, "cliente" => $cliente, "pagos" => $pagos])
             ->setPaper('a4', 'landscape')
             ->stream('reporteDetallePDF.pdf');
+    }
+
+    public function reporteComisionPDF(Request $request)
+    {
+        //dd($request);
+        $date1 = $request->fecha1;
+        $date2 = $request->fecha2;
+        $vendedor_id = $request->vendedor_id;
+        //$producto=$request->producto_id;
+        //dd($request);
+        //Consulta de Inmuebles
+
+        $ventas = DB::table('ventas as v')
+        ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
+        ->join('clientes as c', 'c.id', '=', 'v.cliente_id')
+        ->join('vendedores as ven', 'ven.id', '=', 'v.vendedor_id')
+        ->select('v.id', 'v.fact_nro','v.nro_recibo', 'v.iva5', 'v.iva10', 'v.ivaTotal', 'v.exenta', 'v.fecha',
+        'v.total', 'v.estado', 'c.nombre','cot.dolVenta','cot.psVenta','cot.rsVenta')
+        ->where('v.estado', '=', "0");
+
+        if ($date1 != null && $date2 != null) 
+        {
+            $ventas = $ventas->whereBetween('v.fecha', [($date1), ($date2)]);
+        } 
+
+        if($vendedor_id != "0")
+        {
+            $ventas = $ventas->where('v.vendedor_id','=',$vendedor_id);
+        }
+        $ventas = $ventas->orderBy('v.id', 'asc');
+        $ventas = $ventas->get();
+
+        if($vendedor_id != "0")
+        {
+            $nombreVen = Vendedor::findOrFail($vendedor_id);            
+            $nombreVen = $nombreVen->nombre;
+
+            $porcentaje = Vendedor::findOrFail($vendedor_id);            
+            $porcentaje = $porcentaje->porcentaje;
+        }
+        else
+        {
+            $nombreVen = "TODOS/AS";
+            $porcentaje = 2;
+        }
+
+        if ($ventas->isEmpty()) {
+            $ventas = "Vacio";
+        }
+        //dd($ventas);
+        $moneda = "GS";
+        return $pdf = \PDF::loadView('informe.reporteComisionPDF', ["date1" => $date1, 
+        "date2" => $date2,"nombreVen" => $nombreVen,"porcentaje" => $porcentaje,
+            "ventas" => $ventas])
+            ->setPaper('a4', 'portrait')
+            ->stream('reporteComisionPDF.pdf');
     }
 
     public function reporteVentaPDF(Request $request)

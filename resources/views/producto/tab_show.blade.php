@@ -121,19 +121,19 @@
             <div class="col-md-4">
                 <label class="col-sm-4 col-form-label">Precio Guaraníes</label>
                 <div class="col-md-4">
-                    <input type="text" id="precio_gs" value="{{number_format(($producto->precio_venta * $cotizaciones->dolVenta), 0, ",", ".")}}" name="precio_gs" class="form-control number2" placeholder="Ingrese el precio venta">
+                    <input readonly type="text" id="precio_gs" value="{{number_format(($producto->precio_venta * $cotizaciones->dolVenta), 0, ",", ".")}}" name="precio_gs" class="form-control number2" placeholder="Ingrese el precio venta">
                 </div>
             </div>
             <div class="col-md-4">
                 <label class="col-sm-4 col-form-label">Precio Pesos</label>
                 <div class="col-md-4">
-                    <input type="text" id="precio_ps" value="{{number_format(($producto->precio_venta*($cotizaciones->dolVenta/$cotizaciones->psVenta)), 0, ",", ".")}}" name="precio_ps" class="form-control number2" placeholder="Ingrese el precio venta">
+                    <input readonly type="text" id="precio_ps" value="{{number_format(($producto->precio_venta*($cotizaciones->psVenta)), 2, ",", ".")}}" name="precio_ps" class="form-control number2" placeholder="Ingrese el precio venta">
                 </div>
             </div>
             <div class="col-md-4">
                 <label class="col-sm-4 col-form-label">Precio Reales</label>
                 <div class="col-md-4">
-                    <input type="text" id="precio_rs" value="{{number_format(($producto->precio_venta*($cotizaciones->dolVenta/$cotizaciones->rsVenta)), 0, ",", ".")}}" name="precio_rs" class="form-control number2" placeholder="Ingrese el precio venta">
+                    <input readonly type="text" id="precio_rs" value="{{number_format(($producto->precio_venta*($cotizaciones->rsVenta)), 2, ",", ".")}}" name="precio_rs" class="form-control number2" placeholder="Ingrese el precio venta">
                 </div>
             </div>
         </div>
@@ -141,7 +141,7 @@
             <div class="col-md-4">
                 <label for="horizontal-firstname-input" class="col-sm-4 col-form-label">Precio Mínimo</label>
                 <div class="mb-3">
-                    <input type="text" id="precio_min" value="{{number_format(($producto->precio_min), 0, ",", ".")}}" name="precio_min" class="form-control number3" placeholder="Ingrese el precio minimo">
+                    <input readonly type="text" id="precio_min" value="{{number_format(($producto->precio_min), 0, ",", ".")}}" name="precio_min" class="form-control number3" placeholder="Ingrese el precio minimo">
                 </div>
             </div>
 

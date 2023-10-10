@@ -23,6 +23,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\VendedorController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\PagoController;
@@ -132,6 +133,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('cheque_emitido', Cheque_emitidoController::class);
     Route::resource('iva', IvaController::class);
     Route::resource('cotizacion', CotizacionController::class);
+    Route::resource('vendedor', VendedorController::class);
 
     Route::post('/obtenerBanco', [Cheque_emitidoController::class, 'obtenerBanco'])->name('obtenerBanco'); //aca de prueba
 
@@ -201,7 +203,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('reporteIvaPDF', [InformeController::class, 'reporteIvaPDF'])->name('reporteIvaPDF');
     Route::get('reporteInventario', [InformeController::class, 'reporteInventario'])->name('reporteInventario');
     Route::get('reporteInventarioPrecio', [InformeController::class, 'reporteInventarioPrecio'])->name('reporteInventarioPrecio');
-
+    Route::post('reporteComisionPDF', [InformeController::class, 'reporteComisionPDF'])->name('reporteComisionPDF');
 
     Route::get('reporteCuotasVencer', [InformeController::class, 'reporteCuotasVencer'])->name('reporteCuotasVencer');
     Route::post('reporteCuotasVencerPDF', [InformeController::class, 'reporteCuotasVencerPDF'])->name('reporteCuotasVencerPDF');

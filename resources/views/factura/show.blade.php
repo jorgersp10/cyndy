@@ -53,7 +53,7 @@
                     <div class="form-group row">
                         <label class="col-md-2 form-control-label"><b>Tipo Factura:</b></label>
                         <div class="col-md-3">
-                            @if($ventas->tipo_factura == 0)
+                            @if($ventas->tipo_factura == 1)
                                 <p>Contado</p>  
                                 @else
                                 <p>Crédito</p>     
@@ -71,8 +71,8 @@
                         <tr class="bg-info">
                             <th>Cantidad</th>
                             <th>Producto</th>
-                            <th>Precio (Gs.)</th>                        
-                            <th>SubTotal (Gs.)</th>
+                            <th>Precio (USD.)</th>                        
+                            <th>SubTotal (USD.)</th>
                         </tr>
                     </thead>
                     
@@ -80,17 +80,32 @@
 
                         <tr>
                             <th  colspan="3"><p align="right">TOTAL:</p></th>
-                            <th><p align="right">Gs. {{number_format(($ventas->total), 0, ",", ".")}}</p></th>
+                            <th><p align="right">USD. {{number_format(($ventas->total), 2, ",", ".")}}</p></th>
                         </tr>
 
                         <tr>
                             <th colspan="3"><p align="right">TOTAL IMPUESTO (10%):</p></th>
-                            <th><p align="right">Gs. {{number_format(($ventas->total/11), 0, ",", ".")}}</p></th>
+                            <th><p align="right">USD. {{number_format(($ventas->total/11), 2, ",", ".")}}</p></th>
                         </tr>
 
                         <tr>
-                            <th  colspan="3"><p align="right">TOTAL PAGAR:</p></th>
-                            <th><p align="right">Gs. {{number_format($ventas->total, 0, ",", ".")}}</p></th>
+                            <th  colspan="3"><p align="right">TOTAL PAGAR USD:</p></th>
+                            <th><p align="right">USD. {{number_format($ventas->total, 2, ",", ".")}}</p></th>
+                        </tr> 
+
+                        <tr>
+                            <th  colspan="3"><p align="right">TOTAL PAGAR Gs.:</p></th>
+                            <th><p align="right">Gs. {{number_format(($ventas->total * $ventas->dolVenta), 0, ",", ".")}}</p></th>
+                        </tr> 
+
+                        <tr>
+                            <th  colspan="3"><p align="right">TOTAL PAGAR $:</p></th>
+                            <th><p align="right">$. {{number_format(($ventas->total * $ventas->psVenta), 2, ",", ".")}}</p></th>
+                        </tr> 
+
+                        <tr>
+                            <th  colspan="3"><p align="right">TOTAL PAGAR R$:</p></th>
+                            <th><p align="right">R$. {{number_format(($ventas->total * $ventas->rsVenta), 2, ",", ".")}}</p></th>
                         </tr> 
 
                     </tfoot>
@@ -101,9 +116,9 @@
 
                         <tr>
                         <td>{{$det->cantidad_calculo}}</td>
-                        <td>{{$det->producto}}</td>
-                        <td>Gs. {{number_format(($det->precio), 0, ",", ".")}}</td>
-                        <td>Gs. {{number_format(($det->cantidad_calculo*$det->precio), 0, ",", ".")}}</td>
+                        <td>{{$det->cod_barra}} - {{$det->producto}}</td>
+                        <td>USD. {{number_format(($det->precio), 2, ",", ".")}}</td>
+                        <td>USD. {{number_format(($det->cantidad_calculo*$det->precio), 2, ",", ".")}}</td>
                         </tr> 
 
 

@@ -75,6 +75,7 @@
                                             <th  data-priority="1">Cliente</th>
                                             <th  data-priority="1">Total</th>
                                             <th  data-priority="1">Iva</th>
+                                            <th  data-priority="1">Vendedor/a</th>
                                             <th  data-priority="1">Estado</th>
                                             <th  data-priority="1">Cambiar Estado</th>
                                             
@@ -96,7 +97,7 @@
                                                 @endif -->
                                                 @if($ven->contable == 1)
                                                 <td>                                     
-                                                <a href="{{URL::action('App\Http\Controllers\FacturaController@factura_pdf',$ven->id)}}" target="_blank">
+                                                    <a href="{{URL::action('App\Http\Controllers\FacturaController@factura_pdf',$ven->id)}}" target="_blank">
                                                         <button type="button" class="btn btn-primary btn-sm" >
                                                             <i class="fa fa-print fa-1x"></i> IMPRI FACT
                                                         </button>
@@ -118,7 +119,7 @@
                                                         </button>
                                                     </a>
                                                 </td>
-                                                <td>{{$ven->fecha}}</td>
+                                                <td>{{ date('d-m-Y', strtotime($ven->fecha)) }}</td>
                                                 @if($ven->contable == 1)
                                                     <td>{{$ven->fact_nro}}</td>
                                                 @else
@@ -127,6 +128,9 @@
                                                 <td>{{$ven->nombre}}</td>
                                                 <td>USD. {{number_format(($ven->total), 2, ".", ",")}}</td>
                                                 <td>USD. {{number_format(($ven->total/11), 2, ".", ",")}}</td>
+                                                <td><button type="button" class="btn btn-secondary btn-sm" data-id_venta="{{$ven->id}}" data-bs-toggle="modal" data-bs-target="#cambiarVendedor">
+                                                    <i class="fa fa-times fa-1x"></i> {{$ven->vendedor}}
+                                                </button></td>
                                                 <td>                                      
                                                     @if($ven->estado==0)
                                                         <button type="button" class="btn btn-primary btn-sm" >
@@ -205,6 +209,35 @@
                 </div>
             </div>   
 
+            <!-- CAMBIAR DE ESTADO -->
+            <div class="modal fade" id="cambiarVendedor" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">¿DESEA CAMBIAR EL VENDEDOR?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('venta.edit','test')}}" method="GET">
+                            
+                            {{csrf_field()}} 
+
+                            <input type="hidden" id="id_venta" name="id_venta" value="">
+
+                            <p></p>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Ir a Cambiar</button>
+                            </div>
+
+                        </form>
+                    </div>                                    
+                </div>
+            </div>
+        </div>
+
             <div class="modal fade" id="verificarUser" data-bs-backdrop="static" data-bs-keyboard="false"
                 tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -272,6 +305,24 @@
         
        /*FIN ventana modal para cambiar estado de la compra*/
     </script>
+
+<script>
+    /*INICIO ventana modal para cambiar estado de Compra*/
+   
+   $('#cambiarVendedor').on('show.bs.modal', function (event) {
+  
+  //console.log('modal abierto');
+  
+  var button = $(event.relatedTarget) 
+  var id_venta = button.data('id_venta')
+  var modal = $(this)
+  // modal.find('.modal-title').text('New message to ' + recipient)
+  
+  modal.find('.modal-body #id_venta').val(id_venta);
+  })
+   
+  /*FIN ventana modal para cambiar estado de la compra*/
+</script>
 
      <script>
          /*INICIO ventana modal para cambiar estado de Compra*/

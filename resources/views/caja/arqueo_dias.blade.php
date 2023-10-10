@@ -218,22 +218,22 @@
                 <tr id="totales">  
                     <td></td>     
                     <td>Total $</td>                                                 
-                    <td>$. {{number_format(($totaldia * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>  
-                    <td>$. {{number_format(($totalefe * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
-                    <td>$. {{number_format(($totaltran * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
-                    <td>$. {{number_format(($totalche * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
-                    <td>$. {{number_format(($totaltd * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td> 
-                    <td>$. {{number_format(($totaltc * ($ar->dolVenta / $ar->psVenta)), 0, ",", ".")}}</td>                                               
+                    <td>$. {{number_format(($totaldia * ($ar->psVenta)), 0, ",", ".")}}</td>  
+                    <td>$. {{number_format(($totalefe * ($ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltran * ($ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totalche * ($ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltd * ($ar->psVenta)), 0, ",", ".")}}</td> 
+                    <td>$. {{number_format(($totaltc * ($ar->psVenta)), 0, ",", ".")}}</td>                                               
                 </tr>
                 <tr id="totales">  
                     <td></td>     
                     <td>Total R$</td>                                                 
-                    <td>R$. {{number_format(($totaldia * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>  
-                    <td>R$. {{number_format(($totalefe * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
-                    <td>R$. {{number_format(($totaltran * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
-                    <td>R$. {{number_format(($totalche * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
-                    <td>R$. {{number_format(($totaltd * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td> 
-                    <td>R$. {{number_format(($totaltc * ($ar->dolVenta / $ar->rsVenta)), 0, ",", ".")}}</td>                                               
+                    <td>R$. {{number_format(($totaldia * ($ar->rsVenta)), 2, ",", ".")}}</td>  
+                    <td>R$. {{number_format(($totalefe * ($ar->rsVenta)), 2, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltran * ($ar->rsVenta)), 2, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totalche * ($ar->rsVenta)), 2, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltd * ($ar->rsVenta)), 2, ",", ".")}}</td> 
+                    <td>R$. {{number_format(($totaltc * ($ar->rsVenta)), 2, ",", ".")}}</td>                                               
                 </tr>
             </tbody>
             @endif

@@ -12,6 +12,7 @@ use App\Models\Proforma;
 use App\Models\Cuota;
 use App\Models\Cuota_det;
 use App\Models\Cliente;
+use App\Models\Venta;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -335,9 +336,34 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        //dd($request);
+        //$venta = Venta::findOrFail($request->id_venta);  
+        $ventas=DB::table('ventas as v')
+        ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
+        ->join('clientes as c','c.id','=','v.cliente_id')
+        ->join('users as u','u.id','=','v.user_id')
+        ->join('vendedores as ven','ven.id','=','v.vendedor_id')
+        ->select('v.id','v.fact_nro','v.iva5','v.iva10','v.ivaTotal','v.exenta','v.fecha',
+            'v.total','v.estado','c.nombre','v.contable','v.nro_recibo','ven.id as vendedor_id',
+            'ven.nombre as vendedor')
+        ->where('v.id','=',$request->id_venta)
+        ->groupBy('v.id','v.fact_nro','v.iva5','v.iva10','v.ivaTotal','v.exenta','v.fecha',
+        'v.total','v.estado','c.nombre','v.contable','v.nro_recibo','ven.id',
+        'ven.nombre')
+        ->first();
+
+        $vendedor_id = $ventas->vendedor_id;
+
+        $vendedores=DB::table('vendedores as v')
+        ->select('v.id','v.nombre','v.num_documento')
+        ->orderBy('v.nombre','asc')
+        ->get();
+
+        return view('factura.editVendedor',["ventas"=>$ventas,"vendedor_id"=>$vendedor_id,
+        "vendedores"=>$vendedores]);
+        
     }
 
     /**
@@ -347,9 +373,14 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $venta = Venta::findOrFail($request->id_venta);
+        $venta->vendedor_id = $request->vendedor_id;
+
+        $venta->update();
+
+        return Redirect::to('factura')->with('msj2', 'VENDEDOR CAMBIADO CON ÉXITO');
     }
 
     /**

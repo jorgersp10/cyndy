@@ -22,22 +22,14 @@ class VendedorController extends Controller
         if($request){
 
             $sql=trim($request->get('buscarTexto'));
-            $vendedores=DB::table('vendedores')
-            ->join('sucursales','vendedores.idsucursal','=','sucursales.id')
-            ->select('vendedores.id','vendedores.name','vendedores.email','vendedores.num_documento','vendedores.direccion',
-            'vendedores.telefono','vendedores.condicion','vendedores.dob as fecha_nacimiento',
-            'sucursales.sucursal as sucursal','sucursales.id as idsucursal')
-            ->where('vendedores.name','LIKE','%'.$sql.'%')
-            ->orwhere('vendedores.num_documento','LIKE','%'.$sql.'%')
-            ->orderBy('vendedores.id','desc')
+            $vendedores=DB::table('vendedores as v')
+            ->select('v.id','v.nombre','v.num_documento','v.porcentaje')
+            ->where('v.nombre','LIKE','%'.$sql.'%')
+            ->orwhere('v.num_documento','LIKE','%'.$sql.'%')
+            ->orderBy('v.id','desc')
             ->paginate(10);
 
-            /*listar los sucursales en ventana modal*/
-            $sucursales=DB::table('sucursales')
-            ->select('id','sucursal')
-            ->where('id','!=','0')->get(); 
-
-            return view('vendedor.index',["vendedores"=>$vendedores,"sucursales"=>$sucursales,"buscarTexto"=>$sql]);
+            return view('vendedor.index',["vendedores"=>$vendedores,"buscarTexto"=>$sql]);
         
             //return $vendedores;
         }
@@ -50,7 +42,7 @@ class VendedorController extends Controller
      */
     public function create()
     {
-        //
+        return view('vendedor.create');
     }
 
     /**
@@ -61,18 +53,15 @@ class VendedorController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         $vendedor= new Vendedor();
-        $vendedor->name = strtoupper($request->nombre);
+        $vendedor->nombre = strtoupper($request->nombre);
         $vendedor->num_documento = $request->num_documento;
-        $vendedor->direccion = $request->direccion;
-        $vendedor->telefono = $request->telefono;
-        $vendedor->email = $request->email;        
-        $vendedor->dob = $request->fecha_nacimiento;
-        $vendedor->idsucursal = $request->idsucursal;
-        $vendedor->condicion = '1'; 
+        $vendedor->porcentaje = str_replace(",",".",$request->porcentaje);
+        $vendedor->condicion = '0'; 
 
         $vendedor->save();
-        return Redirect::to("vendedor");
+        return Redirect::to("vendedor")->with('msj2','VENDEDOR/A REGISTRADO');
     }
 
     /**
@@ -94,7 +83,13 @@ class VendedorController extends Controller
      */
     public function edit($id)
     {
-        //
+        $vendedor=DB::table('vendedores as v')
+        ->select('v.id','v.nombre','v.num_documento','v.porcentaje')
+        ->orwhere('v.id','=',$id)
+        ->first();
+
+        return view('vendedor.edit',["vendedor"=>$vendedor]);
+        
     }
 
     /**
@@ -107,17 +102,13 @@ class VendedorController extends Controller
     public function update(Request $request)
     {
         $vendedor= Vendedor::findOrFail($request->id_vendedor);
-        $vendedor->name = strtoupper($request->nombre);
+        $vendedor->nombre = strtoupper($request->nombre);
         $vendedor->num_documento = $request->num_documento;
-        $vendedor->direccion = $request->direccion;
-        $vendedor->telefono = $request->telefono;
-        $vendedor->email = $request->email;        
-        $vendedor->dob = $request->fecha_nacimiento;
-        $vendedor->idsucursal = $request->idsucursal;
-        $vendedor->condicion = '1'; 
+        $vendedor->porcentaje = str_replace(",",".",$request->porcentaje);
+        $vendedor->condicion = '0'; 
 
-        $vendedor->save();
-        return Redirect::to("vendedor");
+        $vendedor->update();
+        return Redirect::to("vendedor")->with('msj2','VENDEDOR/A ACTUALIZADO');
     }
 
     /**

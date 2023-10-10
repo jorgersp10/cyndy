@@ -72,13 +72,13 @@
                             <div class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="precio">Peso</label>
                                 <div class="mb-3">
-                                    <input readonly type="text" id="psVenta" name="psVenta" value="{{number_format(($cotizaciones->psVenta), 0, ",", ".")}}" class="form-control">
+                                    <input readonly type="text" id="psVenta" name="psVenta" value="{{number_format(($cotizaciones->psVenta), 2, ",", ".")}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="precio">Real</label>
                                 <div class="mb-3">
-                                    <input readonly type="text" id="rsVenta" name="rsVenta" value="{{number_format(($cotizaciones->rsVenta), 0, ",", ".")}}" class="form-control">
+                                    <input readonly type="text" id="rsVenta" name="rsVenta" value="{{number_format(($cotizaciones->rsVenta), 2, ",", ".")}}" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -91,10 +91,21 @@
                                     <input autofocus type="text" id="buscador" name="buscador" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="cantidad">Cantidad</label>
                                 <div class="mb-3">
                                     <input type="number" id="cantidad" name="cantidad" class="form-control" value=1 placeholder="Ingrese cantidad">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="col-md-5 form-control-label" for="cantidad">Vendedor/a</label>
+                                <div class="mb-3">
+                                    <select style= "width:280px" class="form-control" name="vendedor_id" id="vendedor_id">  
+                                        <option disabled value="0">Seleccione</option>                     
+                                        @foreach($vendedores as $v)                                    
+                                            <option value="{{$v->id}}">{{$v->nombre}}</option>                                        
+                                        @endforeach
+                                    </select>                                
                                 </div>
                             </div>
                         </div>
@@ -801,9 +812,14 @@
                     dolar= $("#dolVenta").val();
                     dolar = dolar.replaceAll(".","");
                     peso= $("#psVenta").val();
-                    peso = peso.replaceAll(".","");
+                    console.log("PESO 1: "+peso);
+                    peso = peso.replaceAll(",",".");
+                    //console.log("PESO 2: "+pesoA);
+                    //peso = pesoA.replaceAll(".","");
+                    console.log("PESO 3: "+peso);
                     real= $("#rsVenta").val();
-                    real = real.replaceAll(".","");
+                    real = real.replaceAll(",",".");
+                    //real = realA.replaceAll(".","");
                     console.log("precio ob: "+precio);
                     if(parseFloat(stockpro) < parseFloat(cantidad)){
                         
@@ -941,8 +957,8 @@
                     }
                 }
                 $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
-                $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
-                $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
+                $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
+                $("#total_rs").val(formatNumberGS.new(total_pagar*real));
                 
                 }
         
@@ -1017,8 +1033,8 @@
                     }
                 }
                 $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
-                $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
-                $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
+                $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
+                $("#total_rs").val(formatNumberGS.new(total_pagar*real));
                 
                 $("#fila" + index).remove();
                 //evaluar();
@@ -1073,9 +1089,11 @@
             dolar= $("#dolVenta").val();
             dolar = dolar.replaceAll(".","");
             peso= $("#psVenta").val();
-            peso = peso.replaceAll(".","");
+            peso = peso.replaceAll(",",".");
+            //peso = pesoA.replaceAll(".","");
             real= $("#rsVenta").val();
-            real = real.replaceAll(".","");
+            real = real.replaceAll(",",".");
+            //real = realA.replaceAll(".","");
              if(parseFloat(stockpro) < parseFloat(cantidad)){
                 
                 Swal.fire({
@@ -1212,8 +1230,8 @@
                     }
                 }
         $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
-        $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
-        $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
+        $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
+        $("#total_rs").val(formatNumberGS.new(total_pagar*real));
         
         }
    
@@ -1272,9 +1290,9 @@
                         return this.formatear(num);
                         }
                     }
-            $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
-            $("#total_ps").val(formatNumberGS.new(total_pagar*(dolar/peso)));
-            $("#total_rs").val(formatNumberGS.new(total_pagar*(dolar/real)));
+                $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
+                $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
+                $("#total_rs").val(formatNumberGS.new(total_pagar*real));
           
            $("#fila" + index).remove();
            //evaluar();
