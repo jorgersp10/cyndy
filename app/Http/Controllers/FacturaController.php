@@ -612,15 +612,16 @@ class FacturaController extends Controller
         ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
         ->join('clientes as c','c.id','=','v.cliente_id')
         ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
+        ->join('vendedores as ven','ven.id','=','v.vendedor_id')
         ->select('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
         'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
-        'cot.dolVenta','cot.psVenta','cot.rsVenta'
+        'cot.dolVenta','cot.psVenta','cot.rsVenta','ven.nombre as vendedor'
         ,DB::raw('sum(vdet.cantidad_calculo*precio) as total'))
         ->where('v.id','=',$id)
         ->orderBy('v.id', 'desc')
         ->groupBy('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
         'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
-        'cot.dolVenta','cot.psVenta','cot.rsVenta')
+        'cot.dolVenta','cot.psVenta','cot.rsVenta','ven.nombre')
         ->first();
 
         /*mostrar detalles*/
@@ -646,6 +647,7 @@ class FacturaController extends Controller
         $fpdf->Cell(10,3,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
         $fpdf->Cell(10,4,'Cliente: '.$cabVenta->nombre,0,1,'');
         $fpdf->Cell(10,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
+        $fpdf->Cell(10,4,'Vendedor/a: '.$cabVenta->vendedor,0,1,'');
         $fpdf->Ln(0);
         // COLUMNAS
         $fpdf->SetFont('Helvetica', 'B', 8);
@@ -721,14 +723,15 @@ class FacturaController extends Controller
         ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
         ->join('clientes as c','c.id','=','v.cliente_id')
         ->join('cotizaciones as cot','cot.id','=','v.cotiz_id')
+        ->join('vendedores as ven','ven.id','=','v.vendedor_id')
         ->select('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
         'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
-        'cot.dolVenta','cot.psVenta','cot.rsVenta'
+        'cot.dolVenta','cot.psVenta','cot.rsVenta','ven.nombre as vendedor'
         ,DB::raw('sum(vdet.cantidad_calculo*precio) as total'))
         ->orderBy('v.id', 'desc')
         ->groupBy('v.id','v.fact_nro','v.fecha','v.total','c.nombre','v.iva5',
         'v.iva10','v.ivaTotal','v.exenta','v.tipo_factura','c.num_documento','v.nro_recibo',
-        'cot.dolVenta','cot.psVenta','cot.rsVenta')
+        'cot.dolVenta','cot.psVenta','cot.rsVenta','ven.nombre')
         ->first();
 
         $venta_id = $cabVenta->id;
@@ -756,6 +759,7 @@ class FacturaController extends Controller
         $fpdf->Cell(10,3,'Comprobante Nro: '.$cabVenta->nro_recibo,0,1,'');
         $fpdf->Cell(10,4,'Cliente: '.$cabVenta->nombre,0,1,'');
         $fpdf->Cell(10,4,'Fecha: '.date('d-m-Y', strtotime($cabVenta->fecha)),0,1,'');
+        $fpdf->Cell(10,4,'Vendedor/a: '.$cabVenta->vendedor,0,1,'');
         $fpdf->Ln(0);
         // COLUMNAS
         $fpdf->SetFont('Helvetica', 'B', 8);

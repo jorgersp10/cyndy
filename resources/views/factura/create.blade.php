@@ -72,7 +72,7 @@
                             <div class="col-md-3">
                                 <label class="col-md-3 form-control-label" for="precio">Peso</label>
                                 <div class="mb-3">
-                                    <input readonly type="text" id="psVenta" name="psVenta" value="{{number_format(($cotizaciones->psVenta), 2, ",", ".")}}" class="form-control">
+                                    <input readonly type="text" id="psVenta" name="psVenta" value="{{($cotizaciones->psVenta)}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -813,9 +813,9 @@
                     dolar = dolar.replaceAll(".","");
                     peso= $("#psVenta").val();
                     console.log("PESO 1: "+peso);
-                    peso = peso.replaceAll(",",".");
+                    //peso = peso.replaceAll(".","");
                     //console.log("PESO 2: "+pesoA);
-                    //peso = pesoA.replaceAll(".","");
+                    //peso = peso.replaceAll(",",".");
                     console.log("PESO 3: "+peso);
                     real= $("#rsVenta").val();
                     real = real.replaceAll(",",".");
@@ -866,9 +866,9 @@
                     }
 
                             //totales para la vista
-                            subtotalVista[cont]=formatNumber.new(subtotal[cont]);
-                            totalVista=formatNumber.new (total);
-
+                            subtotalVista[cont]=(subtotal[cont]).toFixed(2);
+                            totalVista=(total).toFixed(2);
+                            console.log("precio loco: "+totalVista);
                             var fila= '<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+cont+
                             ');"><i class="fa fa-times fa-2x"></i></button></td> <td><input  style="width:400px" type="hidden" name="producto_id[]" value="'+producto_id+'">'+producto+
                             '</td> <td><input readonly style="width:100px" type="text" id="precio[]" name="precio[]"  value="'+precio+
@@ -923,19 +923,19 @@
                     }
                 }
         
-                $("#total_html").html("USD. " + formatNumber.new(total));
+                $("#total_html").html("USD. " + (total).toFixed(2));
                 $("#total").html("USD. " + total);
                 //total_iva=total*iva/100;
                 total_iva=Math.round(total/iva);
                 total_pagar=total;
-                $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
-                $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
+                $("#total_iva_html").html("USD. " + (total_iva).toFixed(2));
+                $("#total_pagar_html").html("USD. " + (total_pagar).toFixed(2));
                 $("#total_pagar").val(total_pagar);
                 $("#total_iva").val(total_iva);
 
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-                $("#total_apag").val(formatNumber.new(total_pagar));
-                $("#total_pagadof").val(formatNumber.new(total_pagar));
+                $("#total_apag").val((total_pagar).toFixed(2));
+                $("#total_pagadof").val((total_pagar).toFixed(2));
                 //TOTALES EN LAS OTRAS MONEDAS
                 var formatNumberGS = {
                     separador: ".", // separador para los miles
@@ -1009,8 +1009,8 @@
                 $("#total_pagar").val(total_pagar_html);
 
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-                $("#total_apag").val(formatNumber.new(total));
-                $("#total_pagadof").val(formatNumber.new(total));
+                $("#total_apag").val((total).toFixed(2));
+                $("#total_pagadof").val((total).toFixed(2));
 
                 //TOTALES EN LAS OTRAS MONEDAS
                 var formatNumberGS = {
@@ -1078,6 +1078,7 @@
             {
                 precio= $("#precio_recargo").val();
             } 
+            console.log("PRUEBA PRECIO: ".precio);
             stockpro = $("#stock").val();
             precio_minimo= $("#precio_min").val();
             precio_maximo= $("#precio_max").val();
@@ -1089,7 +1090,7 @@
             dolar= $("#dolVenta").val();
             dolar = dolar.replaceAll(".","");
             peso= $("#psVenta").val();
-            peso = peso.replaceAll(",",".");
+            //peso = peso.replaceAll(",",".");
             //peso = pesoA.replaceAll(".","");
             real= $("#rsVenta").val();
             real = real.replaceAll(",",".");
@@ -1138,8 +1139,8 @@
             }
 
                //totales para la vista
-               subtotalVista[cont]=formatNumber.new(subtotal[cont]);
-               totalVista=formatNumber.new (total);
+               subtotalVista[cont]=(subtotal[cont]).toFixed(2);
+               totalVista= (total).toFixed(2);
 
                 var fila= '<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+cont+
                 ');"><i class="fa fa-times fa-2x"></i></button></td> <td><input  style="width:400px" type="hidden" name="producto_id[]" value="'+producto_id+'">'+producto+
@@ -1196,19 +1197,19 @@
             }
         }
    
-        $("#total_html").html("USD. " + formatNumber.new(total));
+        $("#total_html").html("USD. " + (total).toFixed(2));
         $("#total").html("USD. " + total);
         //total_iva=total*iva/100;
         total_iva=Math.round(total/iva);
         total_pagar=total;
-        $("#total_iva_html").html("USD. " + formatNumber.new(total_iva));
-        $("#total_pagar_html").html("USD. " + formatNumber.new(total_pagar));
+        $("#total_iva_html").html("USD. " + (total_iva).toFixed(2));
+        $("#total_pagar_html").html("USD. " + (total_pagar).toFixed(2));
         $("#total_pagar").val(total_pagar);
         $("#total_iva").val(total_iva);
 
         //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-        $("#total_apag").val(formatNumber.new(total_pagar));
-        $("#total_pagadof").val(formatNumber.new(total_pagar));
+        $("#total_apag").val((total_pagar).toFixed(2));
+        $("#total_pagadof").val((total_pagar).toFixed(2));
         //TOTALES EN LAS OTRAS MONEDAS
         var formatNumberGS = {
                     separador: ".", // separador para los miles
@@ -1268,8 +1269,8 @@
             $("#total_pagar").val(total_pagar_html);
 
             //TOTAL PARA EL DETALLE DE COBRO total_pagadof
-            $("#total_apag").val(formatNumber.new(total));
-            $("#total_pagadof").val(formatNumber.new(total));
+            $("#total_apag").val((total).toFixed(2));
+            $("#total_pagadof").val((total).toFixed(2));
             //TOTALES EN LAS OTRAS MONEDAS
             var formatNumberGS = {
                         separador: ".", // separador para los miles
