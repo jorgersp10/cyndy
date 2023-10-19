@@ -606,7 +606,7 @@ class FacturaController extends Controller
         $printer->close();
     }
 
-    public function imprimirTicket($id)
+    public function imprimirTicket($id,$tc)
     {
         $cabVenta=DB::table('ventas as v')
         ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
@@ -664,61 +664,235 @@ class FacturaController extends Controller
         $total_vencido=0;
         $total_cantidad=0;
 
-        foreach($detallesVenta as $row)
+        if($tc == "TODO")
         {
-            $fpdf->SetFont('Helvetica', '', 7);
-            $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
-            $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
-            $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
-            $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
-            $fpdf->Ln(3);
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
 
-            $total_cantidad = $total_cantidad + $row->cantidad;
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
             
-        }  
-        $fpdf->Cell(50,0,'','T');
-        $fpdf->Ln(1);
-        //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
-        $totalGs = $cabVenta->total * $cabVenta->dolVenta;
-        $totalPs = $cabVenta->total * ($cabVenta->psVenta);
-        $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
-        
-        $fpdf->SetFont('Helvetica', '', 7);
-        $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
-        $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
-        $fpdf->Cell(10, -5, "-",0,0,'R');
-        $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
-        
-        // SUMATORIO DE LOS PRODUCTOS Y EL IVA
-        $fpdf->Ln(6);
-        $fpdf->Cell(50,0,'','T');
-        $fpdf->Ln(2);    
-        $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
-        $fpdf->Ln(3); 
-        $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
-        $fpdf->Ln(3);
-        $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
-        $fpdf->Ln(3);
-        $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
-        $fpdf->Ln(4);
-        $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
-        //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
-        //$fpdf->Output('ficha.pdf','F');
-        $fpdf->Output("I");
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);    
+            $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            $fpdf->Ln(3); 
+            $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(3);
+            $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(3);
+            $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
 
-        exit;
+            exit;
+        }
+        if($tc == "USD")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);    
+            $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($tc == "PS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio*$cabVenta->psVenta), 0, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "$ ".number_format(($row->precio*$row->cantidad_calculo*$cabVenta->psVenta), 0, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "$ ".number_format(($totalPs), 0, ".", ","),0,0,'R');            
+            //SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);   
+            $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($tc == "GS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio* $cabVenta->dolVenta), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(15, -5, "Gs. ".number_format(($row->precio*$row->cantidad_calculo* $cabVenta->dolVenta), 0, ",", "."),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);               
+            $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(3);           
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($tc == "RS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio*$cabVenta->rsVenta), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "R$ ".number_format(($row->precio*$row->cantidad_calculo*$cabVenta->rsVenta), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "R$ ".number_format(($totalRs), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);   
+           
+            $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
     }
 
-     public function imprimirTicketUltimo()
+    public function imprimirTicketUltimo(Request $request)
     {
+        //dd($request);
+        //$monedaSelec = $request->
         $cabVenta=DB::table('ventas as v')
         ->join('ventas_det as vdet','v.id','=','vdet.venta_id')
         ->join('clientes as c','c.id','=','v.cliente_id')
@@ -776,57 +950,230 @@ class FacturaController extends Controller
         $total_vencido=0;
         $total_cantidad=0;
 
-        foreach($detallesVenta as $row)
+        if($request->moneda == "TODO")
         {
-            $fpdf->SetFont('Helvetica', '', 7);
-            $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
-            $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
-            $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
-            $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
-            $fpdf->Ln(3);
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
 
-            $total_cantidad = $total_cantidad + $row->cantidad;
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
             
-        }  
-        $fpdf->Cell(50,0,'','T');
-        $fpdf->Ln(1);
-        //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
-        $totalGs = $cabVenta->total * $cabVenta->dolVenta;
-        $totalPs = $cabVenta->total * ($cabVenta->psVenta);
-        $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
-        
-        $fpdf->SetFont('Helvetica', '', 7);
-        $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
-        $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
-        $fpdf->Cell(10, -5, "-",0,0,'R');
-        $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
-        
-        // SUMATORIO DE LOS PRODUCTOS Y EL IVA
-        $fpdf->Ln(6);
-        $fpdf->Cell(50,0,'','T');
-        $fpdf->Ln(2);    
-        $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
-        $fpdf->Ln(3); 
-        $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
-        $fpdf->Ln(3);
-        $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
-        $fpdf->Ln(3);
-        $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
-        $fpdf->Cell(10, 7, '', 0);
-        $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
-        $fpdf->Ln(4);
-        $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
-        //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
-        //$fpdf->Output('ficha.pdf','F');
-        $fpdf->Output("I");
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);    
+            $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            $fpdf->Ln(3); 
+            $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(3);
+            $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(3);
+            $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
 
-        exit;
+            exit;
+        }
+        if($request->moneda == "USD")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "USD ".number_format(($row->precio*$row->cantidad_calculo), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);    
+            $fpdf->Cell(25, 7, 'TOTAL USD. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "USD ".number_format(($cabVenta->total), 2, ".", ","),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($request->moneda == "PS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio*$cabVenta->psVenta), 0, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "$ ".number_format(($row->precio*$row->cantidad_calculo*$cabVenta->psVenta), 0, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "$ ".number_format(($totalPs), 0, ".", ","),0,0,'R');            
+            //SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);   
+            $fpdf->Cell(25, 7, 'TOTAL $. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "$. ".number_format(($totalPs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($request->moneda == "GS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio* $cabVenta->dolVenta), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(15, -5, "Gs. ".number_format(($row->precio*$row->cantidad_calculo* $cabVenta->dolVenta), 0, ",", "."),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);               
+            $fpdf->Cell(25, 7, 'TOTAL Gs. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "Gs. ".number_format(($totalGs), 0, ",", "."),0,0,'R');
+            $fpdf->Ln(3);           
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        if($request->moneda == "RS")
+        {
+            foreach($detallesVenta as $row)
+            {
+                $fpdf->SetFont('Helvetica', '', 7);
+                $fpdf->MultiCell(20,4,$row->codigo,0,'L'); 
+                $fpdf->Cell(25, -5, number_format(($row->cantidad), 0, ",", "."),0,0,'R');
+                $fpdf->Cell(10, -5, number_format(($row->precio*$cabVenta->rsVenta), 2, ".", ","),0,0,'R');
+                $fpdf->Cell(15, -5, "R$ ".number_format(($row->precio*$row->cantidad_calculo*$cabVenta->rsVenta), 2, ".", ","),0,0,'R');
+                $fpdf->Ln(3);
+
+                $total_cantidad = $total_cantidad + $row->cantidad;
+                
+            }  
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(1);
+            //HALLAMOS LOS PRECIOS EN OTRAS MONEDAS
+            $totalGs = $cabVenta->total * $cabVenta->dolVenta;
+            $totalPs = $cabVenta->total * ($cabVenta->psVenta);
+            $totalRs = $cabVenta->total * ($cabVenta->rsVenta);
+            
+            $fpdf->SetFont('Helvetica', '', 7);
+            $fpdf->MultiCell(20,4,"Total ITEMS",0,'L'); 
+            $fpdf->Cell(25, -5, number_format(($total_cantidad), 0, ",", "."),0,0,'R');
+            $fpdf->Cell(10, -5, "-",0,0,'R');
+            $fpdf->Cell(15, -5, "R$ ".number_format(($totalRs), 2, ".", ","),0,0,'R');
+            
+            // SUMATORIO DE LOS PRODUCTOS Y EL IVA
+            $fpdf->Ln(6);
+            $fpdf->Cell(50,0,'','T');
+            $fpdf->Ln(2);   
+           
+            $fpdf->Cell(25, 7, 'TOTAL R$. ', 0);    
+            $fpdf->Cell(10, 7, '', 0);
+            $fpdf->Cell(15, 7, "R$. ".number_format(($totalRs), 2, ",", "."),0,0,'R');
+            $fpdf->Ln(4);
+            $fpdf->Cell(50, 7, 'COMPROBANTE SIN VALOR CONTABLE. ', 0); 
+            //$fpdf->Cell(0,10,'Printing line number '.$i,0,1);
+            //$fpdf->Output('ficha.pdf','F');
+            $fpdf->Output("OfficeForm.pdf","I");
+
+            exit;
+        }
+        
     }
 
     public function show($id)

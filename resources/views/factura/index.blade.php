@@ -105,9 +105,34 @@
                                                 </td>     
                                                 @else
                                                 <td> 
-                                                <a href="{{URL::action('App\Http\Controllers\FacturaController@imprimirTicket',$ven->id)}}" target="_blank">
+                                                    {{-- <a href="{{URL::action('App\Http\Controllers\FacturaController@imprimirTicket',$ven->id)}}" target="_blank">
                                                         <button type="button" class="btn btn-warning btn-sm" >
                                                             <i class="fa fa-print fa-1x"></i> TICKET
+                                                        </button>
+                                                    </a> --}}
+                                                    <a href="{{url('/imprimirTicket',array($ven->id,"TODO"))}}" target="_blank">
+                                                        <button type="button" class="btn btn-warning btn-sm" >
+                                                            <i class="fa fa-print fa-1x"></i> TICKET
+                                                        </button>
+                                                    </a>
+                                                    <a href="{{url('/imprimirTicket',array($ven->id,"USD"))}}" target="_blank">
+                                                        <button type="button" class="btn btn-danger btn-sm" >
+                                                            <i class="fa fa-print fa-1x"></i> USD
+                                                        </button>
+                                                    </a>
+                                                    <a href="{{url('/imprimirTicket',array($ven->id,"PS"))}}" target="_blank">
+                                                        <button type="button" class="btn btn-info btn-sm" >
+                                                            <i class="fa fa-print fa-1x"></i> P$
+                                                        </button>
+                                                    </a>
+                                                    <a href="{{url('/imprimirTicket',array($ven->id,"GS"))}}" target="_blank">
+                                                        <button type="button" class="btn btn-success btn-sm" >
+                                                            <i class="fa fa-print fa-1x"></i> GS
+                                                        </button>
+                                                    </a>
+                                                    <a href="{{url('/imprimirTicket',array($ven->id,"RS"))}}" target="_blank">
+                                                        <button type="button" class="btn btn-dark btn-sm" >
+                                                            <i class="fa fa-print fa-1x"></i> R$
                                                         </button>
                                                     </a>
                                                 </td>    

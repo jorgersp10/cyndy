@@ -30,13 +30,45 @@
                                         <div class="alert alert-success" role="alert">{{session('msj2')}}</div>    
                                     @endif
                             </div>
-                            <div class="col-sm-3">
-                                <a href="{{URL::action('App\Http\Controllers\FacturaController@imprimirTicketUltimo')}}" target="_blank">
-                                    <button type="button" class="btn btn-warning btn-md" >
-                                        <i class="fa fa-print fa-1x"></i> IMPRIMIR TICKET
-                                    </button>
-                                </a>
-                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <form id="form_mora" action="{{ route('imprimirTicketUltimo') }}" method="POST" target="_blank">
+                                @csrf
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-warning btn-md">
+                                            <i class="fa fa-print fa-1x"></i> IMPRIMIR TICKET
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="moneda" value="USD" class="form-control">
+                                            <label class="form-check-label" for="USD">USD</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="moneda" value="PS" class="form-control">
+                                            <label class="form-check-label" for="PS">PESOS</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="moneda" value="GS" class="form-control">
+                                            <label class="form-check-label" for "GS">GUARANÍES</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="moneda" value="RS" class="form-control">
+                                            <label class="form-check-label" for="RS">REALES</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="moneda" value="TODO" class="form-control" checked>
+                                            <label class="form-check-label" for="TODO">TODAS</label>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                        
                         </div>
                     </div>
 
@@ -170,6 +202,36 @@
                                     <button type="button" onClick="agregar_producto()" class="btn btn-primary"><i class="fa fa-plus fa-1x"></i> Agregar detalle</button>
                                 </div>
                             </div>
+                            <div class="col-3">
+                                <label for="horizontal-firstname-input" class="col-md-5 col-form-label">TOTAL USD</label>
+                                <div class="col-md-5">
+                                    <input readonly="readonly" type="text" id="total_apag_vista" name="total_apag_vista" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label for="horizontal-firstname-input" class="col-md-5 col-form-label">TOTAL Gs.</label>
+                                <div class="col-md-5">
+                                    <input readonly="readonly" type="text" id="total_gs_vista" name="total_gs_vista" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label for="horizontal-firstname-input" class="col-md-5 col-form-label">TOTAL $ Pesos</label>
+                                <div class="col-md-5">
+                                    <input readonly="readonly" type="text" id="total_ps_vista" name="total_ps_vista" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label for="horizontal-firstname-input" class="col-md-5 col-form-label">TOTAL R$ Reales</label>
+                                <div class="col-md-5">
+                                    <input readonly="readonly" type="text" id="total_rs_vista" name="total_rs_vista" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label style="color: red; font-weight: bold;" for="horizontal-firstname-input" class="col-md-5 col-form-label">TOTAL DE ITEMS</label>
+                                <div class="col-md-5">
+                                    <input readonly="readonly" type="text" id="total_items" name="total_items" class="form-control">
+                                </div>
+                            </div>   
                         </div>
                         <div hidden class="form-group row">
                             <div hidden class="col-md-4">
@@ -775,6 +837,8 @@
         subtotal=[];
         totalVista=0;
         total=0;
+        cant_total=[];
+        sumaitems=0;
         subtotalVista=[];
         producto_acu=[];
         cantidad_acu=[];
@@ -843,6 +907,9 @@
                         cantidad_calculo = cantidad/valor;                      
                         subtotal[cont]=(cantidad_calculo*precioFinal);
                         total= total+subtotal[cont];
+                        cant_total[cont] = parseFloat(cantidad);
+                        sumaitems= sumaitems + cant_total[cont];
+                        console.log("total de sumaitems: "+sumaitems);
                         console.log("total de totales barcode: "+total);
                         //funcion para agregar separador de miles
                         var formatNumber = {
@@ -856,7 +923,7 @@
                             var regx = /(\d+)(\d{3})/;
                             while (regx.test(splitLeft)) {
                                 splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
-                            }
+                            }subtotal
                             return this.simbol + splitLeft;
                         },
                         new: function(num, simbol) {
@@ -935,6 +1002,7 @@
 
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
                 $("#total_apag").val((total_pagar).toFixed(2));
+                $("#total_apag_vista").val((total_pagar).toFixed(2));
                 $("#total_pagadof").val((total_pagar).toFixed(2));
                 //TOTALES EN LAS OTRAS MONEDAS
                 var formatNumberGS = {
@@ -959,6 +1027,12 @@
                 $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
                 $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
                 $("#total_rs").val(formatNumberGS.new(total_pagar*real));
+
+                $("#total_gs_vista").val(formatNumberGS.new(total_pagar*dolar));
+                $("#total_ps_vista").val(formatNumberGS.new(total_pagar*peso));
+                $("#total_rs_vista").val(formatNumberGS.new(total_pagar*real));
+
+                $("#total_items").val(sumaitems);
                 
                 }
         
@@ -999,6 +1073,7 @@
                 }
         
                 total=total-subtotal[index];
+                sumaitems=sumaitems-cant_total[index];
                 //total_iva= total*11/100;
                 total_iva=Math.round(total/iva);
                 total_pagar_html = total;
@@ -1010,6 +1085,7 @@
 
                 //TOTAL PARA EL DETALLE DE COBRO total_pagadof
                 $("#total_apag").val((total).toFixed(2));
+                $("#total_apag_vista").val((total).toFixed(2));
                 $("#total_pagadof").val((total).toFixed(2));
 
                 //TOTALES EN LAS OTRAS MONEDAS
@@ -1035,6 +1111,12 @@
                 $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
                 $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
                 $("#total_rs").val(formatNumberGS.new(total_pagar*real));
+
+                $("#total_gs_vista").val(formatNumberGS.new(total_pagar*dolar));
+                $("#total_ps_vista").val(formatNumberGS.new(total_pagar*peso));
+                $("#total_rs_vista").val(formatNumberGS.new(total_pagar*real));
+
+                $("#total_items").val(sumaitems);
                 
                 $("#fila" + index).remove();
                 //evaluar();
@@ -1055,6 +1137,8 @@
    
       var cont=0;
       total=0;
+      cant_total=[];
+      sumaitems=0;
       subtotal=[];
       totalVista=0;
       subtotalVista=[];
@@ -1116,6 +1200,9 @@
                
                subtotal[cont]=(cantidad_calculo*precioFinal);
                total= total+subtotal[cont];
+               cant_total[cont] = parseFloat(cantidad);
+                sumaitems= sumaitems + cant_total[cont];
+               console.log("total de sumaitems: "+sumaitems);
                 console.log("total de totales: "+total);
                //funcion para agregar separador de miles
                var formatNumber = {
@@ -1209,6 +1296,7 @@
 
         //TOTAL PARA EL DETALLE DE COBRO total_pagadof
         $("#total_apag").val((total_pagar).toFixed(2));
+        $("#total_apag_vista").val((total_pagar).toFixed(2));
         $("#total_pagadof").val((total_pagar).toFixed(2));
         //TOTALES EN LAS OTRAS MONEDAS
         var formatNumberGS = {
@@ -1233,6 +1321,12 @@
         $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
         $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
         $("#total_rs").val(formatNumberGS.new(total_pagar*real));
+
+        $("#total_gs_vista").val(formatNumberGS.new(total_pagar*dolar));
+        $("#total_ps_vista").val(formatNumberGS.new(total_pagar*peso));
+        $("#total_rs_vista").val(formatNumberGS.new(total_pagar*real));
+
+        $("#total_items").val(sumaitems);
         
         }
    
@@ -1259,6 +1353,7 @@
         }
    
             total=total-subtotal[index];
+            sumaitems=sumaitems-cant_total[index];
             //total_iva= total*11/100;
             total_iva=Math.round(total/iva);
             total_pagar_html = total;
@@ -1270,6 +1365,7 @@
 
             //TOTAL PARA EL DETALLE DE COBRO total_pagadof
             $("#total_apag").val((total).toFixed(2));
+            $("#total_apag_vista").val((total).toFixed(2));
             $("#total_pagadof").val((total).toFixed(2));
             //TOTALES EN LAS OTRAS MONEDAS
             var formatNumberGS = {
@@ -1294,6 +1390,7 @@
                 $("#total_gs").val(formatNumberGS.new(total_pagar*dolar));
                 $("#total_ps").val(formatNumberGS.new(total_pagar*peso));
                 $("#total_rs").val(formatNumberGS.new(total_pagar*real));
+                $("#total_items").val(sumaitems);
           
            $("#fila" + index).remove();
            //evaluar();
